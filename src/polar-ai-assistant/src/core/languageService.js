@@ -29,6 +29,19 @@ export function detectLanguage(text = '') {
   if (DEVANAGARI_REGEX.test(text)) {
     return 'hi'
   }
+  const lower = text.toLowerCase().trim()
+
+  // Strong English interrogative and grammatical markers
+  const englishStarters = /^(what|how|who|where|when|which|is|are|can|could|should|would|tell|show|explain|describe|list|give)\b/i
+  const strongEnglishPhrases = /\b(what is|what are|how to|how do|is it safe|are there|tell me|show me|which of|in the|of the|for the|with the|to the|at the|from the)\b/i
+
+  if (englishStarters.test(lower) || strongEnglishPhrases.test(lower)) {
+    // Only treat as Hinglish if it contains distinct Hindi question words or verbal markers
+    if (!/\b(kya|kaun|kahan|kidhar|kab|kitna|kitne|batao|dikhao|karo|hai|hain|hoga|hogi)\b/i.test(lower)) {
+      return 'en'
+    }
+  }
+
   if (isHinglishText(text)) {
     return 'hinglish'
   }
@@ -43,7 +56,8 @@ export function isHinglishText(text = '') {
   const lower = text.toLowerCase()
   const patterns = [
     /\b(kaun|kaunsa|kaunsi|kaunse|konsa|konsi|konse|kon\s+sa|kon\s+si|kon\s+se|kya|kyu|kyun|kahan|kidhar|kab|kitna|kitne|kitni|kis|kise|kisko)\b/i,
-    /\b(hai|hain|hoon|hoga|hogi|honge|tha|thi|the)\b/i,
+    /\b(hai|hain|hoon|hoga|hogi|honge|tha|thi)\b/i,
+    /(?:\b(?:wo|woh|sab|log)\s+the\b|\bthe\s+kya\b|\bthe\s+wahan\b)/i,
     /\b(sabse|aage|chal\s*raha|raha\s*hai|rahi\s*hai|rahe\s*hain|khatam|jaldi|pehle|pahle|baad|poora|pura|peeche)\b/i,
     /\b(batao|bataiye|dikhao|dikhaye|bolo|karo|kar\s*do|kijiye|dega|denge|chahiye|rakha|bhejo)\b/i,
     /\b(badha|badhao|hata|hatao|kam\s*kar|zyada|par|iske|iski|iska|unka|unki|inme|isme|wahan|yahan|idhar|udhar|ye|wo|woh|bacha|paas|pass|saath)\b/i,
@@ -207,7 +221,7 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
   const combined = `${q} ${norm}`
   const l = lang === 'hi' || lang === 'hinglish' ? lang : 'en'
 
-  // Helper: ensure we do not hijack operational questions about stations (roster, weather, inventory)
+  // Helper: ensure we do not hijack operational questions about stations (roster, weather, inventory, live flight safety)
   const isStationOpsQuery =
     combined.includes('kaun') ||
     combined.includes('who') ||
@@ -221,7 +235,21 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
     combined.includes('emergency') ||
     combined.includes('alert') ||
     combined.includes('log') ||
-    combined.includes('personnel')
+    combined.includes('personnel') ||
+    combined.includes('fly') ||
+    combined.includes('flying') ||
+    combined.includes('flight') ||
+    combined.includes('udana') ||
+    combined.includes('safe to fly')
+
+  const hasStationMention =
+    combined.includes('maitri') ||
+    combined.includes('bharati') ||
+    combined.includes('himadri') ||
+    combined.includes('novo') ||
+    combined.includes('larsemann') ||
+    combined.includes('schirmacher') ||
+    combined.includes('gangotri')
 
   // 1. ContinuousTileLayer / 360 Map
   if (
@@ -290,24 +318,26 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
     return POLAR_DOMAIN_KNOWLEDGE.offlineSync[l] || POLAR_DOMAIN_KNOWLEDGE.offlineSync.en
   }
 
-  // 5. Flight Limits & Aviation Safety
+  // 5. Flight Limits & Aviation Safety (Static Envelopes when not querying live station weather)
   if (
-    combined.includes('flight limit') ||
-    combined.includes('flight safety') ||
-    combined.includes('aviation limit') ||
-    combined.includes('twin otter limit') ||
-    combined.includes('twin otter flight') ||
-    combined.includes('flying limit') ||
-    combined.includes('flying weather') ||
-    combined.includes('vfr minimum') ||
-    combined.includes('vfr limit') ||
-    combined.includes('ifr limit') ||
-    combined.includes('helicopter limit') ||
-    combined.includes('aircraft limit') ||
-    combined.includes('flat light') ||
-    combined.includes('उड़ान सीमा') ||
-    combined.includes('विमान सुरक्षा') ||
-    combined.includes('उड़ान सुरक्षा')
+    !hasStationMention &&
+    (combined.includes('flight limit') ||
+      combined.includes('flight safety') ||
+      combined.includes('aviation limit') ||
+      combined.includes('twin otter limit') ||
+      combined.includes('twin otter flight') ||
+      combined.includes('flying limit') ||
+      combined.includes('flying weather') ||
+      combined.includes('vfr minimum') ||
+      combined.includes('vfr limit') ||
+      combined.includes('ifr limit') ||
+      combined.includes('helicopter limit') ||
+      combined.includes('aircraft limit') ||
+      combined.includes('flat light') ||
+      combined.includes('comnap') ||
+      combined.includes('उड़ान सीमा') ||
+      combined.includes('विमान सुरक्षा') ||
+      combined.includes('उड़ान सुरक्षा'))
   ) {
     return POLAR_DOMAIN_KNOWLEDGE.flightLimits[l] || POLAR_DOMAIN_KNOWLEDGE.flightLimits.en
   }
@@ -318,6 +348,9 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
     combined.includes('whiteout') ||
     combined.includes('condition 1') ||
     combined.includes('sop-blz-01') ||
+    combined.includes('storm protocol') ||
+    combined.includes('barfani tufan') ||
+    combined.includes('barfani toofan') ||
     combined.includes('तूफान प्रोटोकॉल') ||
     combined.includes('बर्फानी तूफान') ||
     combined.includes('व्हाइटआउट')
@@ -331,6 +364,9 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
     combined.includes('sop-crv-02') ||
     combined.includes('z-rig') ||
     combined.includes('snow picket') ||
+    combined.includes('darar') ||
+    combined.includes('fallen into crevasse') ||
+    combined.includes('fell in crevasse') ||
     combined.includes('दरार में गिरना') ||
     combined.includes('हिमदरार') ||
     combined.includes('क्रेवास')
@@ -345,6 +381,7 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
     combined.includes('sop-med-03') ||
     combined.includes('cold injury') ||
     combined.includes('rewarming') ||
+    combined.includes('frost bite') ||
     combined.includes('शीतदंश') ||
     combined.includes('हाइपोथर्मिया')
   ) {
@@ -358,10 +395,15 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
     combined.includes('genset failure') ||
     combined.includes('power outage') ||
     combined.includes('blackout') ||
+    combined.includes('power failure') ||
     combined.includes('sop-pwr-04') ||
+    combined.includes('sop-eng-04') ||
     combined.includes('secondary genset') ||
     combined.includes('load shedding') ||
-    combined.includes('जनरेटर विफलता')
+    combined.includes('जनरेटर विफलता') ||
+    combined.includes('बिजली गुल') ||
+    ((combined.includes('generator') || combined.includes('generators') || combined.includes('genset')) &&
+      (combined.includes('fail') || combined.includes('fails') || combined.includes('failure') || combined.includes('outage') || combined.includes('blackout') || combined.includes('emergency') || combined.includes('sop') || combined.includes('protocol') || combined.includes('problem')))
   ) {
     return POLAR_DOMAIN_KNOWLEDGE.generatorSOP[l] || POLAR_DOMAIN_KNOWLEDGE.generatorSOP.en
   }
@@ -371,15 +413,17 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
     (combined.includes('fire') && (combined.includes('sop') || combined.includes('suppression') || combined.includes('protocol') || combined.includes('extinguisher') || combined.includes('habitat') || combined.includes('aag'))) ||
     combined.includes('sop-fir-05') ||
     combined.includes('inergen') ||
-    combined.includes('अग्नि शमन')
+    combined.includes('aag lagne') ||
+    combined.includes('अग्नि शमन') ||
+    combined.includes('आग लगना')
   ) {
     return POLAR_DOMAIN_KNOWLEDGE.fireSOP[l] || POLAR_DOMAIN_KNOWLEDGE.fireSOP.en
   }
 
   // 11. Fuel Freezing & Paraffin Management SOP
   if (
-    (combined.includes('fuel') && (combined.includes('freeze') || combined.includes('freezing') || combined.includes('paraffin') || combined.includes('contamination') || combined.includes('sop') || combined.includes('wax') || combined.includes('jamna'))) ||
-    (combined.includes('diesel') && (combined.includes('freeze') || combined.includes('freezing') || combined.includes('jamna') || combined.includes('wax'))) ||
+    (combined.includes('fuel') && (combined.includes('freeze') || combined.includes('freezing') || combined.includes('paraffin') || combined.includes('contamination') || combined.includes('sop') || combined.includes('wax') || combined.includes('jamna') || combined.includes('jamne') || combined.includes('filter'))) ||
+    (combined.includes('diesel') && (combined.includes('freeze') || combined.includes('freezing') || combined.includes('jamna') || combined.includes('wax') || combined.includes('jamne'))) ||
     combined.includes('sop-ful-06') ||
     combined.includes('polar diesel') ||
     combined.includes('ईंधन जमना') ||
@@ -406,7 +450,7 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
   if (!isStationOpsQuery) {
     // Maitri
     if (
-      (combined.includes('maitri') && (combined.includes('about') || combined.includes('history') || combined.includes('profile') || combined.includes('kya hai') || combined.includes('overview') || combined.includes('information') || combined.includes('details') || combined.includes('baare mein') || combined.includes('विवरण') || combined.includes('इतिहास'))) ||
+      (combined.includes('maitri') && (combined.includes('about') || combined.includes('history') || combined.includes('profile') || combined.includes('kya hai') || combined.includes('overview') || combined.includes('information') || combined.includes('details') || combined.includes('baare mein') || combined.includes('विवरण') || combined.includes('इतिहास') || combined.includes('specs'))) ||
       combined.includes('lake priyadarshini')
     ) {
       return POLAR_DOMAIN_KNOWLEDGE.maitriStation[l] || POLAR_DOMAIN_KNOWLEDGE.maitriStation.en
@@ -414,7 +458,7 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
 
     // Bharati
     if (
-      (combined.includes('bharati') && (combined.includes('about') || combined.includes('history') || combined.includes('profile') || combined.includes('kya hai') || combined.includes('overview') || combined.includes('information') || combined.includes('details') || combined.includes('baare mein') || combined.includes('विवरण') || combined.includes('इतिहास'))) ||
+      (combined.includes('bharati') && (combined.includes('about') || combined.includes('history') || combined.includes('profile') || combined.includes('kya hai') || combined.includes('overview') || combined.includes('information') || combined.includes('details') || combined.includes('baare mein') || combined.includes('विवरण') || combined.includes('इतिहास') || combined.includes('specs'))) ||
       combined.includes('isro ground station')
     ) {
       return POLAR_DOMAIN_KNOWLEDGE.bharatiStation[l] || POLAR_DOMAIN_KNOWLEDGE.bharatiStation.en
@@ -422,7 +466,7 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
 
     // Himadri
     if (
-      combined.includes('himadri') && (combined.includes('about') || combined.includes('history') || combined.includes('profile') || combined.includes('kya hai') || combined.includes('overview') || combined.includes('information') || combined.includes('details') || combined.includes('baare mein') || combined.includes('विवरण') || combined.includes('इतिहास'))
+      combined.includes('himadri') && (combined.includes('about') || combined.includes('history') || combined.includes('profile') || combined.includes('kya hai') || combined.includes('overview') || combined.includes('information') || combined.includes('details') || combined.includes('baare mein') || combined.includes('विवरण') || combined.includes('इतिहास') || combined.includes('specs'))
     ) {
       return POLAR_DOMAIN_KNOWLEDGE.himadriStation[l] || POLAR_DOMAIN_KNOWLEDGE.himadriStation.en
     }
@@ -441,7 +485,19 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
     return POLAR_DOMAIN_KNOWLEDGE.dakshinGangotri[l] || POLAR_DOMAIN_KNOWLEDGE.dakshinGangotri.en
   }
 
-  // 15. Antarctic Treaty System
+  // 15. IndARC Observatory
+  if (
+    combined.includes('indarc') ||
+    combined.includes('ind-arc') ||
+    combined.includes('underwater observatory') ||
+    combined.includes('moored observatory') ||
+    combined.includes('इंड-आर्क') ||
+    combined.includes('इंडआर्क')
+  ) {
+    return POLAR_DOMAIN_KNOWLEDGE.indarc[l] || POLAR_DOMAIN_KNOWLEDGE.indarc.en
+  }
+
+  // 16. Antarctic Treaty System
   if (
     combined.includes('antarctic treaty') ||
     combined.includes('madrid protocol') ||
@@ -453,7 +509,7 @@ export function matchDomainKnowledge(rawQuery = '', lang = 'en') {
     return POLAR_DOMAIN_KNOWLEDGE.antarcticTreaty[l] || POLAR_DOMAIN_KNOWLEDGE.antarcticTreaty.en
   }
 
-  // 16. NCPOR & MoES
+  // 17. NCPOR & MoES
   if (
     combined.includes('ncpor') ||
     combined.includes('moes') ||
@@ -488,15 +544,15 @@ const HINDI_TERM_TRANSLATIONS = [
   { en: /\bPLANNING\b/g, hi: 'योजना में (PLANNING)' },
   { en: /\bRESPONDING\b/g, hi: 'कार्रवाई जारी (RESPONDING)' },
   { en: /\bRESOLVED\b/g, hi: 'हल किया गया (RESOLVED)' },
-  { en: /\bMaitri Station\b/g, hi: 'मैत्री स्टेशन' },
-  { en: /\bBharati Station\b/g, hi: 'भारती स्टेशन' },
-  { en: /\bHimadri Station\b/g, hi: 'हिमाद्रि स्टेशन' },
-  { en: /\bDakshin Gangotri Depot\b/g, hi: 'दक्षिण गंगोत्री डिपो' },
-  { en: /\bSchirmacher Field Camp\b/g, hi: 'शिरमाकर फील्ड कैंप' },
-  { en: /\bLarsemann Field Camp\b/g, hi: 'लार्समैन फील्ड कैंप' },
-  { en: /\bNovo Runway\b/g, hi: 'नोवो रनवे' },
-  { en: /\bORV Sagar Nidhi\b/g, hi: 'ओआरवी सागर निधि' },
-  { en: /\bMV Polar Pioneer\b/g, hi: 'एमवी पोलर पायनियर' },
+  { en: /\bMaitri Station\b/g, hi: 'मैत्री स्टेशन (Maitri Station)' },
+  { en: /\bBharati Station\b/g, hi: 'भारती स्टेशन (Bharati Station)' },
+  { en: /\bHimadri Station\b/g, hi: 'हिमाद्रि स्टेशन (Himadri Station)' },
+  { en: /\bDakshin Gangotri Depot\b/g, hi: 'दक्षिण गंगोत्री डिपो (Dakshin Gangotri)' },
+  { en: /\bSchirmacher Field Camp\b/g, hi: 'शिरमाकर फील्ड कैंप (Schirmacher Camp)' },
+  { en: /\bLarsemann Field Camp\b/g, hi: 'लार्समैन फील्ड कैंप (Larsemann Camp)' },
+  { en: /\bNovo Runway\b/g, hi: 'नोवो रनवे (Novo Runway)' },
+  { en: /\bORV Sagar Nidhi\b/g, hi: 'ओआरवी सागर निधि (ORV Sagar Nidhi)' },
+  { en: /\bMV Polar Pioneer\b/g, hi: 'एमवी पोलर पायनियर (MV Polar Pioneer)' },
 ]
 
 /**

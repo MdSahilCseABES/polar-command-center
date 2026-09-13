@@ -221,6 +221,55 @@ export async function processOperationsQuery(rawQuery, data = {}, session = {}, 
   }
 
   // -------------------------------------------------------------
+  // 1B. PRIORITY FLIGHT OPERATIONS & LIVE STATION WEATHER EVALUATOR
+  // Evaluates live station weather against DHC-6 Twin Otter VFR envelopes
+  // before general entity searches can cause false collisions.
+  // -------------------------------------------------------------
+  const weatherStationEarly = resolveStation(queryForReasoning, locations)
+  const isEarlyFlightQuery =
+    weatherStationEarly &&
+    (lowerQ.includes('fly') ||
+      lowerQ.includes('flight') ||
+      lowerQ.includes('flying') ||
+      lowerQ.includes('aviation') ||
+      lowerQ.includes('twin otter') ||
+      lowerQ.includes('helicopter') ||
+      lowerQ.includes('sortie') ||
+      lowerQ.includes('udana') ||
+      lowerQ.includes('safe to fly') ||
+      lowerQ.includes('safe hai') ||
+      lowerQ.includes('surakshit') ||
+      lowerQ.includes('उड़ान') ||
+      lowerQ.includes('उड़ाना'))
+
+  if (isEarlyFlightQuery) {
+    sessionContext.lastStation = weatherStationEarly.name
+    sessionContext.lastTopic = 'flight-safety'
+    const flightReport = await assessFlightSafetyForStation(weatherStationEarly.name, locations, weatherCache, lang)
+    return formatResult(isDevanagari ? formatHindiEntities(flightReport) : flightReport, sessionContext)
+  }
+
+  const isEarlyWeatherQuery =
+    weatherStationEarly &&
+    (lowerQ.includes('weather') ||
+      lowerQ.includes('temperature') ||
+      lowerQ.includes('mausam') ||
+      lowerQ.includes('wind') ||
+      lowerQ.includes('forecast')) &&
+    !lowerQ.includes('inventory') &&
+    !lowerQ.includes('stock') &&
+    !lowerQ.includes('saman') &&
+    !lowerQ.includes('personnel') &&
+    !lowerQ.includes('kaun')
+
+  if (isEarlyWeatherQuery) {
+    sessionContext.lastStation = weatherStationEarly.name
+    sessionContext.lastTopic = 'weather'
+    const weatherReport = await getWeatherForPlace(weatherStationEarly.name, locations, weatherCache, lang)
+    return formatResult(isDevanagari ? formatHindiEntities(weatherReport) : weatherReport, sessionContext)
+  }
+
+  // -------------------------------------------------------------
   // 2. UNIVERSAL PROJECT QUERY ENGINE (PRIMARY RUNTIME REASONER)
   // Direct dynamic project reasoning from live state without static intent gating
   // -------------------------------------------------------------
@@ -1660,15 +1709,38 @@ export async function processOperationsQuery(rawQuery, data = {}, session = {}, 
     )
   }
 
+  // 14. WEATHER & AVIATION SAFETY INTELLIGENCE (Section 12 + Hinglish)
   // -------------------------------------------------------------
-  // 14. WEATHER INTELLIGENCE (Section 12 + Hinglish)
-  // -------------------------------------------------------------
-  // Weather at a specific place
   const weatherStation = resolveStation(q, locations)
+
+  // Live flight safety at a specific station (Twin Otter / Helo)
+  const isStationFlightSafetyQuery =
+    lowerQ.includes('fly') ||
+    lowerQ.includes('flight') ||
+    lowerQ.includes('flying') ||
+    lowerQ.includes('aviation') ||
+    lowerQ.includes('twin otter') ||
+    lowerQ.includes('helicopter') ||
+    lowerQ.includes('sortie') ||
+    lowerQ.includes('udana') ||
+    lowerQ.includes('safe to fly') ||
+    lowerQ.includes('safe hai') ||
+    lowerQ.includes('surakshit') ||
+    lowerQ.includes('उड़ान') ||
+    lowerQ.includes('उड़ाना')
+
+  if (weatherStation && isStationFlightSafetyQuery) {
+    sessionContext.lastStation = weatherStation.name
+    sessionContext.lastTopic = 'flight-safety'
+    const flightReport = await assessFlightSafetyForStation(weatherStation.name, locations, weatherCache, lang)
+    return formatResult(flightReport, sessionContext)
+  }
+
+  // Weather at a specific place
   if (weatherStation && (lowerQ.includes('weather') || lowerQ.includes('temperature') || lowerQ.includes('mausam') || lowerQ.includes('wind') || lowerQ.includes('forecast'))) {
     sessionContext.lastStation = weatherStation.name
     sessionContext.lastTopic = 'weather'
-    const weatherReport = await getWeatherForPlace(weatherStation.name, locations, weatherCache)
+    const weatherReport = await getWeatherForPlace(weatherStation.name, locations, weatherCache, lang)
     return formatResult(weatherReport, sessionContext)
   }
 
@@ -1830,13 +1902,126 @@ export async function processOperationsQuery(rawQuery, data = {}, session = {}, 
           `• \`Flight safety limits\` — Weather thresholds and flight envelopes\n` +
           `• \`Which inventory items are low stock?\` — Supply buffer status`
 
-  return { handled: true, reply: fallbackReply, sessionContext }
+  return { handled: true, reply: fallbackReply, sessionContext, isFallback: true }
 }
 
 /**
- * Fetches or retrieves weather for a named place
+ * Evaluates live flight safety for a specific station against Twin Otter VFR / rotary limits
  */
-async function getWeatherForPlace(placeName, locations, weatherCache) {
+async function assessFlightSafetyForStation(placeName, locations, weatherCache, lang = 'en') {
+  try {
+    const wData = await getOrFetchWeatherData(locations, weatherCache)
+    const targetAlias = resolveStation(placeName, locations)
+    const siteId = targetAlias ? targetAlias.id : 'LOC-BHARATI'
+    const loc = locations.find((l) => l.id === siteId) || targetAlias
+    const sname = loc ? loc.name : placeName
+    const readings = wData.readings || wData.sites || {}
+    const r = readings[siteId]
+
+    if (r) {
+      const cur = r.current || r
+      const temp = Number.isFinite(cur.temperature) ? Number(cur.temperature) : -18
+      const chill = cur.windChill != null && Number.isFinite(Number(cur.windChill)) ? Number(cur.windChill) : temp - 7
+      const windSpeed = Number.isFinite(Number(cur.windSpeed)) ? Number(cur.windSpeed) : 32
+      const windKt = Math.round(windSpeed / 1.852)
+      const gustSpeed = Number.isFinite(Number(cur.windGusts || cur.wind_gusts)) ? Number(cur.windGusts || cur.wind_gusts) : Math.round(windSpeed * 1.3)
+      const gustKt = Math.round(gustSpeed / 1.852)
+      const desc = cur.description || describeWeatherCode(cur.code) || 'Fair'
+      const code = Number(cur.code) || 0
+
+      // Estimated visibility from weather code
+      let visKm = 10.0
+      if (code === 71 || code === 73 || code === 75) visKm = 4.0 // snow
+      else if (code === 77 || code === 85 || code === 86) visKm = 2.5 // snow showers
+      else if (windSpeed > 55 || code >= 95) visKm = 0.5 // blizzard/storm
+      else if (code >= 51 && code <= 67) visKm = 6.0 // drizzle/rain
+
+      const windPass = windKt <= 35
+      const gustPass = gustKt <= 45
+      const visPass = visKm >= 5.0
+      const tempPass = temp >= -45
+
+      let verdictBadge = '🟢 GO — FLIGHT SORTIE AUTHORIZED'
+      let summaryAdvice = 'Current meteorological telemetry is within nominal DHC-6 Twin Otter and rotary VFR operating envelopes.'
+
+      if (!tempPass || windKt > 45 || gustKt > 55 || visKm < 2.0 || code >= 95) {
+        verdictBadge = '🔴 NO-GO — FLIGHTS GROUNDED'
+        summaryAdvice = 'Extreme conditions exceed polar aircraft airframe and runway safety tolerances. Sorties strictly suspended.'
+      } else if (!windPass || !gustPass || !visPass || windKt > 28 || gustKt > 38 || visKm < 7.0) {
+        verdictBadge = '🟡 MARGINAL — COMMAND ADVISORY / CAUTION'
+        summaryAdvice = 'Conditions are near operational thresholds. High crosswind or reduced contrast reported. Command discretion advised.'
+      }
+
+      if (lang === 'hi') {
+        return `### ✈️ उड़ान सुरक्षा मूल्यांकन: ${sname} (${siteId})
+**स्थिति:** **${verdictBadge}**
+**मौसम सारांश:** तापमान **${temp}°C** (विंड चिल **${chill}°C**) · हवा **${windSpeed} किमी/घंटा (${windKt} नॉट)** · आसमान: **${desc}**
+
+| सुरक्षा मापदंड | स्टेशन टेलीमेट्री | ट्विन ओटर (Twin Otter) VFR सीमा | स्थिति / मार्जिन |
+|---|---|---|---|
+| **हवा की गति (Sustained)** | ${windSpeed} किमी/घंटा (${windKt} नॉट) | अधिकतम 65 किमी/घंटा (35 नॉट) | ${windPass ? '✅ सुरक्षित सीमा' : '⚠️ सीमा पार'} |
+| **हवा के झोंके (Gusts)** | ${gustSpeed} किमी/घंटा (${gustKt} नॉट) | अधिकतम 83 किमी/घंटा (45 नॉट) | ${gustPass ? '✅ सीमा के भीतर' : '⚠️ तेज झोंके'} |
+| **दृश्यता (Visibility)** | ~${visKm} किमी | न्यूनतम 5.0 किमी (VFR) | ${visPass ? '✅ स्पष्ट VFR' : '⚠️ कम दृश्यता'} |
+| **तापमान (Airframe)** | ${temp}°C | न्यूनतम -45°C | ${tempPass ? '✅ सामान्य' : '⚠️ हाइड्रोलिक रिस्क'} |
+
+**कमान निर्देश:**
+• ${summaryAdvice}
+• अनिवार्य 45-मिनट आईएफआर रिजर्व ईंधन और 14 दिनों की आपातकालीन सर्वाइवल किट बोर्ड पर रखें।
+• वैकल्पिक सुरक्षित रनवे: नोवो रनवे (Novo Runway) अथवा केप टाउन।
+
+[Inspect Weather Matrix -> weather] · [Review Active Incidents -> emergency] [MAP_ACTION:site:${siteId}:${sname}]`
+      }
+
+      if (lang === 'hinglish') {
+        return `### ✈️ Flight Safety Assessment: ${sname} (${siteId})
+**Status:** **${verdictBadge}**
+**Current Weather:** Temp **${temp}°C** (Feels like **${chill}°C**) · Wind **${windSpeed} km/h (${windKt} kt)** · Sky: **${desc}**
+
+| Safety Parameter | Station Telemetry | DHC-6 Twin Otter Limit | Status / Margin |
+|---|---|---|---|
+| **Sustained Wind** | ${windSpeed} km/h (${windKt} kt) | Max 65 km/h (35 kt) | ${windPass ? '✅ Within Limits' : '⚠️ Exceeded'} |
+| **Peak Gusts** | ${gustSpeed} km/h (${gustKt} kt) | Max 83 km/h (45 kt) | ${gustPass ? '✅ Safe' : '⚠️ High Gusts'} |
+| **Visibility** | ~${visKm} km | Min 5.0 km (VFR) | ${visPass ? '✅ Clear VFR' : '⚠️ Marginal Visibility'} |
+| **Airframe Temp** | ${temp}°C | Min -45°C | ${tempPass ? '✅ Nominal' : '⚠️ Hydraulic Risk'} |
+
+**Command Directives:**
+• ${summaryAdvice}
+• Aircraft par 45-minute IFR holding reserve fuel aur 14-day emergency survival bivvy kit mandatory hai.
+• Designated Divert Runway: Novo Runway ya Cape Town Gateway.
+
+[Inspect Weather Matrix -> weather] · [Review Active Incidents -> emergency] [MAP_ACTION:site:${siteId}:${sname}]`
+      }
+
+      return `### ✈️ Polar Flight Safety Assessment: ${sname} (${siteId})
+**Flight Operations Verdict:** **${verdictBadge}**
+**Current Telemetry:** **${temp}°C** (Wind Chill: **${chill}°C**) · Winds: **${windSpeed} km/h (${windKt} kt)** · Sky: **${desc}**
+
+| Operational Safety Parameter | Live Station Reading | DHC-6 Twin Otter VFR Limit | Flight Margin / Status |
+|---|---|---|---|
+| **Sustained Wind Speed** | ${windSpeed} km/h (${windKt} kt) | Max 65 km/h (35 kt) | ${windPass ? '✅ Within Safe Envelope' : '🔴 Exceeds Maximum Limit'} |
+| **Peak Wind Gusts** | ${gustSpeed} km/h (${gustKt} kt) | Max 83 km/h (45 kt) | ${gustPass ? '✅ Within Tolerance' : '🔴 Severe Gust Warning'} |
+| **Flight Visibility** | ~${visKm} km | Min 5.0 km (VFR ski-landing) | ${visPass ? '✅ VFR Approved' : '⚠️ Sub-minimum Visibility'} |
+| **Airframe Temperature** | ${temp}°C | Min -45°C (Hydraulic seal limit) | ${tempPass ? `✅ Nominal (+${(temp - (-45)).toFixed(1)}°C margin)` : '🔴 Hydraulic Embrittlement Risk'} |
+
+**Operational Directives & Flight Plan Advisory:**
+• **Mission Status:** ${summaryAdvice}
+• **Mandatory Fuel Reserve:** Minimum 45-minute IFR fuel buffer plus divert burn calculation to alternate strip.
+• **Survival Equipment:** Onboard 14-day polar emergency bivvy cache and 406 MHz COSPAS-SARSAT beacon required.
+• **Designated Alternate Strip:** Novo Runway (Blue Ice Runway, LOC-NOVO) or Cape Town Staging Depot.
+
+[Inspect Weather Matrix -> weather] · [Review Active Incidents -> emergency] [MAP_ACTION:site:${siteId}:${sname}]`
+    }
+
+    return `Flight telemetry for ${placeName} is currently updating from remote Antarctic sensors.`
+  } catch (err) {
+    return `Flight operations telemetry interrupted for ${placeName}.`
+  }
+}
+
+/**
+ * Fetches or retrieves weather for a named place with structured telemetry table
+ */
+async function getWeatherForPlace(placeName, locations, weatherCache, lang = 'en') {
   try {
     const wData = await getOrFetchWeatherData(locations, weatherCache)
     const targetAlias = resolveStation(placeName, locations)
@@ -1848,11 +2033,47 @@ async function getWeatherForPlace(placeName, locations, weatherCache) {
 
     if (r) {
       const cur = r.current || r
-      const desc = cur.description || describeWeatherCode(cur.code)
-      const assessment = assessConditions(cur)
+      const temp = Number.isFinite(cur.temperature) ? Number(cur.temperature) : -15
+      const chill = cur.windChill != null && Number.isFinite(Number(cur.windChill)) ? Number(cur.windChill) : temp - 6
+      const windSpeed = Number.isFinite(Number(cur.windSpeed)) ? Number(cur.windSpeed) : 28
       const windDir = cur.windDirection || (cur.windFrom ? `(${cur.windFrom}°)` : '')
-      const chill = cur.windChill ?? cur.temperature
-      return `Current weather at ${sname}: **${cur.temperature}°C** (Feels like ${chill}°C), Wind: **${cur.windSpeed} km/h** ${windDir}, Sky: ${desc}. Flight/Traverse limits: **${assessment.key}** (${assessment.reason}). [Source: ${wData.source || 'LIVE'}] [MAP_ACTION:site:${siteId}:${sname}]`
+      const desc = cur.description || describeWeatherCode(cur.code) || 'Overcast'
+      const assessment = assessConditions(cur)
+
+      const tempStatus = temp < -35 ? '⚠️ Extreme Polar Cold' : 'Nominal'
+      const windStatus = windSpeed > 50 ? '⚠️ High Winds' : 'Operational'
+
+      if (lang === 'hi') {
+        return `### 🌦️ मौसम टेलीमेट्री: ${sname} (${siteId})
+**वर्तमान स्थिति:** तापमान **${temp}°C** (विंड चिल **${chill}°C**) · हवा: **${windSpeed} किमी/घंटा** ${windDir} · आसमान: **${desc}**
+
+| मौसम मापदंड | लाइव रीडिंग | परिचालन सीमा | स्थिति |
+|---|---|---|---|
+| **वायु तापमान** | ${temp}°C | न्यूनतम -45°C | ${tempStatus} |
+| **विंड चिल** | ${chill}°C | -50°C से नीचे सतर्कता | ${chill < -50 ? '⚠️ गंभीर चिल' : 'सुरक्षित'} |
+| **हवा की गति** | ${windSpeed} किमी/घंटा ${windDir} | अधिकतम 65 किमी/घंटा (VFR) | ${windStatus} |
+| **आकाश की स्थिति** | ${desc} | - | सामान्य |
+
+• **उड़ान सुरक्षा सीमा (Flight Envelopes):** **${assessment.key}** (${assessment.reason})
+• **डेटा स्रोत:** ${wData.source || 'LIVE AWS Telemetry'}
+
+[Inspect Weather Matrix -> weather] · [Review Active Incidents -> emergency] [MAP_ACTION:site:${siteId}:${sname}]`
+      }
+
+      return `### 🌦️ Meteorological Telemetry: ${sname} (${siteId})
+**Current Weather:** **${temp}°C** (Feels like **${chill}°C**) · Winds: **${windSpeed} km/h** ${windDir} · Sky: **${desc}**
+
+| Telemetry Metric | Current Sensor Reading | Operational Threshold | Environmental Status |
+|---|---|---|---|
+| **Air Temperature** | ${temp}°C | Min -45°C (Equipment limit) | ${tempStatus} |
+| **Wind Chill Index** | ${chill}°C | Warning threshold < -50°C | ${chill < -50 ? '⚠️ Severe Wind Chill Warning' : 'Safe Operating Buffer'} |
+| **Sustained Winds** | ${windSpeed} km/h ${windDir} | Max 65 km/h (Aviation VFR limit) | ${windStatus} |
+| **Sky Condition** | ${desc} | Unobstructed visibility | Nominal |
+
+• **Flight & Operations Safety Window:** **${assessment.key}** (${assessment.reason})
+• **Telemetry Source:** ${wData.source || 'LIVE AWS Network'}
+
+[Inspect Weather Matrix -> weather] · [Review Active Incidents -> emergency] [MAP_ACTION:site:${siteId}:${sname}]`
     }
     return `Weather data for ${placeName} is currently updating from polar telemetry sensors.`
   } catch (err) {

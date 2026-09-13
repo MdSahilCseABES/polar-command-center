@@ -1088,12 +1088,13 @@ export async function evaluateGeneralProjectQuery(rawQuery, data = {}, session =
       .sort((a, b) => b.shortage - a.shortage)
 
     if (shortageItems.length > 0) {
-      const lines = shortageItems.map(
-        (i) => `• **${i.item_name}** (${i.location}): ${i.qty.toLocaleString()} ${i.unit} available (minimum buffer: ${i.min.toLocaleString()} ${i.unit}) → **${Math.max(0, i.shortage).toLocaleString()} ${i.unit} short**`
-      )
+      const tableRows = shortageItems.map(
+        (i) => `| **${i.item_name}** | ${i.location} | **${i.qty.toLocaleString()} ${i.unit}** | ${i.min.toLocaleString()} ${i.unit} | ⚠️ ${Math.max(0, i.shortage).toLocaleString()} ${i.unit} short |`
+      ).join('\n')
+
       const reply = isHi
-        ? `${scopeName} mein ${shortageItems.length} items low stock / kam hain:\n\n${lines.join('\n')}`
-        : `${shortageItems.length} items are currently below minimum safety stock in ${scopeName}:\n\n${lines.join('\n')}`
+        ? `### ⚠️ Low Stock Inventory Alert: ${scopeName}\nकुल **${shortageItems.length} सामग्री** न्यूनतम सुरक्षा सीमा (Safety Buffer) से कम हैं:\n\n| Item Name | Location | Current Stock | Minimum Buffer | Shortage Deficit |\n|---|---|---|---|---|\n${tableRows}\n\n[Manage Inventory Supplies -> inventory]`
+        : `### ⚠️ Low Stock Inventory Warning: ${scopeName}\n**${shortageItems.length} items** are currently below minimum safety stock buffers:\n\n| Item Name | Location | Current Stock | Safety Buffer | Supply Shortage |\n|---|---|---|---|---|\n${tableRows}\n\n[Manage Inventory Supplies -> inventory]`
       return { handled: true, reply, sessionContext }
     } else {
       const reply = isHi
@@ -1386,7 +1387,7 @@ export async function evaluateGeneralProjectQuery(rawQuery, data = {}, session =
 
       const lines = sPpl.map((p) => `• **${p.id}: ${p.name}** (${p.role} — ${p.status})`)
       const reply = detectedLang === 'hi'
-        ? `**${targetStation.name}** पर कुल **${sPpl.length} कार्मिक** तैनात हैं (आवास क्षमता: ${targetStation.capacity || 'N/A'}):\n\n${formatHindiEntities(lines.join('\n'))}`
+        ? `**${targetStation.name}** पर कुल **${sPpl.length} personnel (कार्मिक)** तैनात हैं (आवास क्षमता: ${targetStation.capacity || 'N/A'}):\n\n${formatHindiEntities(lines.join('\n'))}`
         : isHi
           ? `**${targetStation.name}** par total **${sPpl.length} personnel** stationed / deployed hain (Bed Capacity: ${targetStation.capacity || 'N/A'}):\n\n${lines.join('\n')}`
           : `There are **${sPpl.length} personnel** stationed at **${targetStation.name}** (Capacity: ${targetStation.capacity || 'N/A'}):\n\n${lines.join('\n')}`

@@ -404,278 +404,495 @@ Polar environments mein satellite link unstable hota hai, isliye ye system fully
   },
 
   flightLimits: {
-    en: `### ✈️ Polar Flight Operations & Aviation Safety Minimums
-Standard Operating Flight Envelopes for Antarctic and Arctic air operations:
+    en: `### ✈️ Polar Flight Operations & Aviation Safety Envelopes (COMNAP / DGCA)
+Standard operating minimums and flight envelopes for Antarctic and Arctic air sorties:
 
-| Aircraft Type | Minimum Visibility | Cloud Ceiling | Max Sustained Wind | Max Peak Gusts | Max Crosswind |
+| Aircraft Type | Minimum Visibility | Cloud Ceiling | Max Sustained Wind | Max Peak Gusts | Max Crosswind | Min Airframe Temp |
+|---|---|---|---|---|---|---|
+| **DHC-6 Twin Otter (Ski)** | **≥ 5.0 km** | **≥ 1,000 ft AGL** | **35 kt (65 km/h)** | **45 kt (83 km/h)** | **25 kt (46 km/h)** | **-45°C** |
+| **Basler BT-67 (Ski/Wheel)** | **≥ 5.0 km** | **≥ 1,000 ft AGL** | **35 kt (65 km/h)** | **45 kt (83 km/h)** | **25 kt (46 km/h)** | **-45°C** |
+| **Kamov Ka-32 / Bell 412 (Helo)** | **≥ 3.0 km** | **≥ 500 ft AGL** | **30 kt (55 km/h)** | **40 kt (74 km/h)** | **20 kt (37 km/h)** | **-35°C** |
+
+**Flight Safety & Operational Directives:**
+1. **Flat Light / Whiteout Protocol:** If surface definition degrades to Grade 4/5 (inability to distinguish sastrugi, snow slope, or horizon), sorties must immediately abort and divert to designated alternates (Novo Runway or Cape Town).
+2. **Fuel Reserve Requirement:** Mandatory 45-minute IFR holding reserve fuel plus divert burn calculation for all inter-station flights.
+3. **Emergency Survival Cache:** Every aircraft must carry 14 days of freeze-dried emergency rations, polar survival bivvy shelters, and twin 406 MHz COSPAS-SARSAT beacons.
+4. **Cold-Soak Pre-Heat SOP:** At ambient temperatures < -20°C, Hermann Nelson forced-air engine pre-heaters must run for 45 minutes prior to cranking PT6A-34 turboprops.
+
+[Inspect Weather Matrix -> weather] · [Review Active Incidents -> emergency]`,
+    hinglish: `### ✈️ Polar Flight Safety Limits (Twin Otter, Basler aur Helicopter)
+Antarctic aur Arctic flight operations ke authoritative safety minimums (COMNAP / DGCA standards):
+
+| Aircraft Type | Minimum Visibility | Cloud Ceiling | Max Sustained Wind | Max Gusts | Max Crosswind |
 |---|---|---|---|---|---|
-| **DHC-6 Twin Otter (Ski-equipped)** | **5.0 km** | **1,000 ft AGL** | **35 kt (65 km/h)** | **45 kt (83 km/h)** | **25 kt (46 km/h)** |
-| **Basler BT-67 (Turboprop DC-3)** | **5.0 km** | **1,000 ft AGL** | **35 kt (65 km/h)** | **45 kt (83 km/h)** | **25 kt (46 km/h)** |
-| **Kamov Ka-32 / Bell 412 (Helicopter)** | **1.0 km** | **500 ft AGL** | **40 kt (74 km/h)** | **45 kt (83 km/h)** | **20 kt (37 km/h)** |
+| **DHC-6 Twin Otter (Ski)** | **≥ 5.0 km** | **≥ 1,000 ft** | **35 kt (65 km/h)** | **45 kt (83 km/h)** | **25 kt (46 km/h)** |
+| **Basler BT-67 (Ski/Turboprop)** | **≥ 5.0 km** | **≥ 1,000 ft** | **35 kt (65 km/h)** | **45 kt (83 km/h)** | **25 kt (46 km/h)** |
+| **Helicopter (Kamov Ka-32 / Bell)** | **≥ 3.0 km** | **≥ 500 ft** | **30 kt (55 km/h)** | **40 kt (74 km/h)** | **20 kt (37 km/h)** |
 
-**Critical Flight Safety Directives:**
-1. **Flat Light / Whiteout**: If surface contrast degrades to Flat Light (inability to distinguish sastrugi or horizon), pilots must immediately turn back or divert to coastal alternates (Novo Runway or Cape Town).
-2. **Survival Gear**: Mandatory 14 days of emergency survival rations, polar bivvy shelters, and satellite beacons per aircraft sortie.`,
-    hinglish: `### ✈️ Polar Flight Safety Limits (Twin Otter aur Helicopter)
-Antarctic aur Arctic flight operations ke strict safety minimums:
+**Operational Directives:**
+• **Flat Light Rule**: Agar sastrugi ya horizon dikhna band ho jaye to flight turant abort karke safe alternate runway (Novo Runway / Cape Town) divert karni hoti hai.
+• **Mandatory Survival Kit**: Aircraft mein 14 din ka emergency survival ration aur dual satellite beacons hona anivarya hai.
+• **Engine Pre-Heat**: -20°C se neeche turbine engine ko Hermann Nelson hot-air heater se 45 minute pre-heat karna mandatory hai.
 
-• **Twin Otter (DHC-6) & Basler BT-67**:
-  - Minimum Visibility: **5.0 km**
-  - Minimum Cloud Ceiling: **1,000 feet**
-  - Max Sustained Wind: **35 knots (65 km/h)**
-  - Max Gusts: **45 knots (83 km/h)**
-  - Max Crosswind: **25 knots**
+[Inspect Weather Matrix -> weather] · [Review Active Incidents -> emergency]`,
+    hi: `### ✈️ ध्रुवीय उड़ान सुरक्षा नियम व विमान सीमाएं (COMNAP / DGCA)
+अंटार्कटिक और आर्कटिक वायु अभियानों के लिए अनिवार्य सुरक्षा मापदंड:
 
-• **Helicopter (Kamov Ka-32 / Bell 412)**:
-  - Minimum Visibility: **1.0 km**, Wind Limit: **40 knots**
+| विमान का प्रकार | न्यूनतम दृश्यता | बादलों की न्यूनतम ऊंचाई | अधिकतम निरंतर हवा | अधिकतम झोंके (Gusts) | क्रॉसविंड सीमा |
+|---|---|---|---|---|---|
+| **ट्विन ओटर (Twin Otter DHC-6)** | **≥ 5.0 किमी** | **≥ 1,000 फीट** | **35 नॉट (65 किमी/घंटा)** | **45 नॉट (83 किमी/घंटा)** | **25 नॉट** |
+| **बासलर (Basler BT-67)** | **≥ 5.0 किमी** | **≥ 1,000 फीट** | **35 नॉट (65 किमी/घंटा)** | **45 नॉट (83 किमी/घंटा)** | **25 नॉट** |
+| **हेलिकॉप्टर (Kamov Ka-32)** | **≥ 3.0 किमी** | **≥ 500 फीट** | **30 नॉट (55 किमी/घंटा)** | **40 नॉट (74 किमी/घंटा)** | **20 नॉट** |
 
-⚠️ **Flat Light Protocol**: Agar horizon ya sastrugi dikhna band ho jaye, to flight turant abort karke safe runway par divert karni hoti hai.`,
-    hi: `### ✈️ ध्रुवीय उड़ान सुरक्षा नियम (Flight Operations Minimums)
-अंटार्कटिक और आर्कटिक विमान संचालन के लिए अनिवार्य सुरक्षा सीमाएं:
+**महत्वपूर्ण उड़ान सुरक्षा निर्देश:**
+• **फ्लैट लाइट / व्हाइटआउट नियम**: यदि सतह का कंट्रास्ट समाप्त हो जाए (सास्ट्रूगी या क्षितिज न दिखे), तो उड़ान तत्काल रद्द कर वैकल्पिक रनवे (नोवो / केप टाउन) पर डाइवर्ट करें।
+• **आपातकालीन किट**: प्रत्येक विमान में 14 दिनों का आपातकालीन सूखा राशन और उपग्रह आपातकालीन बीकन होना अनिवार्य है।
+• **इंजन प्री-हीट**: -20°C से कम तापमान पर इंजन को चालू करने से पूर्व 45 मिनट तक गर्म हवा से प्री-हीट करना आवश्यक है।
 
-• **ट्विन ओटर (Twin Otter DHC-6) व बासलर (Basler BT-67)**:
-  - न्यूनतम दृश्यता (Visibility): **5.0 किमी**
-  - बादलों की न्यूनतम ऊंचाई: **1,000 फीट**
-  - अधिकतम हवा की गति: **35 समुद्री मील (65 किमी/घंटा)**
-  - अधिकतम झोंके (Gusts): **45 समुद्री मील (83 किमी/घंटा)**
-  - क्रॉसविंड सीमा: **25 समुद्री मील**
-
-• **हेलिकॉप्टर (Kamov Ka-32)**:
-  - न्यूनतम दृश्यता: **1.0 किमी**, हवा की सीमा: **40 नॉट**
-
-⚠️ **व्हाइटआउट / फ्लैट लाइट नियम**: सतह का कंट्रास्ट समाप्त होते ही उड़ान तत्काल रद्द कर दी जाती है।`
+[Inspect Weather Matrix -> weather] · [Review Active Incidents -> emergency]`
   },
 
   blizzardSOP: {
     en: `### 🚨 Whiteout / Blizzard Condition 1 Protocol (SOP-BLZ-01)
-**Condition 1 Thresholds:** Visibility < 50m, Sustained winds > 55 kt (102 km/h), or Wind Chill < -60°C.
+**Condition 1 Activation Thresholds:** Visibility < 50m, Sustained winds > 55 kt (102 km/h), or Wind Chill < -60°C.
 
-**Immediate Directives:**
-1. **Total Station Lock-in**: Halt all exterior science sorties and outdoor equipment inspections immediately.
-2. **Accountability Muster**: 100% headcount roll call across all habitat modules within 15 minutes.
-3. **Rig Lifelines**: Strict dual-carabiner safety tether ropes for inter-module transit. Never walk unroped.
-4. **Radio Schedules**: Switch VHF/UHF to Emergency Channel 16 / Polar Simplex 1; initiate mandatory hourly check-in with field traverses.
-5. **HVAC & Power**: Switch generator intakes to recirculating snow-hood baffles to prevent katabatic spindrift air-filter choking.`,
-    hinglish: `### 🚨 Blizzard Condition 1 Protocol (SOP-BLZ-01)
-**Condition 1 Criteria:** Visibility < 50m, Wind > 55 knots (102 km/h), ya Wind Chill < -60°C.
+**Immediate Command Directives:**
+1. **Total Station Lock-in:** Halt all exterior movement, science sorties, and equipment checks immediately.
+2. **Accountability Muster:** Conduct 100% headcount roll call across all habitat modules within 15 minutes.
+3. **Rig Lifelines:** If inter-module transit is strictly necessary for life support, use clipped dual-carabiner tether ropes. Never walk unroped.
+4. **SATCOM & Radio Schedules:** Switch handheld VHF/UHF to Emergency Channel 16 / Polar Simplex 1; initiate mandatory hourly check-in with field traverses.
+5. **HVAC & Generator Safeguard:** Switch generator intakes to recirculating snow-hood baffles to prevent katabatic spindrift air-filter choking.
+6. **Medical Standby:** Prepare rewarming hypothermia triage zone in the station surgical bay.
 
-**Immediate Action Steps:**
-1. **Station Lock-in**: Bahar nikalna turant ban. Sabhi field sorties halt.
-2. **Headcount Muster**: 15 minute ke andar 100% personnel ki haaziri confirm karein.
-3. **Lifelines**: Modules ke beech aana-jana sirf clipped safety rope (lifeline) ke sath allowable hai.
-4. **Emergency Radio**: Radio Channel 16 par switch karein aur hourly check-in shuru karein.
-5. **Generator Protection**: Genset air filters ko snow accumulation se bachane ke liye baffles engage karein.`,
+[Navigate to Emergency Response -> emergency] · [Check Live Weather -> weather]`,
+    hinglish: `### 🚨 Whiteout / Blizzard Condition 1 Protocol (SOP-BLZ-01)
+**Condition 1 Thresholds:** Visibility < 50m, Wind > 55 knots (102 km/h), ya Wind Chill < -60°C.
+
+**Immediate Command Directives:**
+1. **Total Station Lock-in**: Bahar nikalna turant ban. Sabhi field sorties aur equipment checks instantly halt.
+2. **Accountability Muster**: 15 minute ke andar sabhi habitat modules mein 100% headcount roll call complete karein.
+3. **Safety Lifelines**: Modules ke beech movement strictly clipped dual-carabiner tether ropes ke sath hi hogi. Kabhie unroped na chalein.
+4. **Emergency Radio**: VHF/UHF Channel 16 / Polar Simplex 1 par switch karein aur hourly check-in shuru karein.
+5. **Generator Protection**: Katabatic barf se air filter jam hone se bachane ke liye snow-hood baffles engage karein.
+6. **Medical Standby**: Station medical surgical bay mein hypothermia rewarming triage ready rakhein.
+
+[Navigate to Emergency Response -> emergency] · [Check Live Weather -> weather]`,
     hi: `### 🚨 बर्फानी तूफान कंडीशन 1 प्रोटोकॉल (SOP-BLZ-01)
 **कंडीशन 1 मापदंड:** दृश्यता < 50 मीटर, हवा की गति > 55 नॉट (102 किमी/घंटा), या विंड चिल < -60°C।
 
-**तत्काल आदेश:**
-1. **पूर्ण स्टेशन लॉकडाउन**: बाहर निकलना और वैज्ञानिक अभियान तुरंत रोक दिए जाएं।
-2. **कार्मिक गणना (Muster)**: 15 मिनट में सभी 100% कर्मियों की उपस्थिति सत्यापित करें।
-3. **लाइफलाइन का उपयोग**: मॉड्यूल्स के बीच केवल बंधी हुई सेफ्टी रस्सियों (लाइफलाइन) के सहारे ही आवागमन करें।
-4. **रेडियो चैनल**: आपातकालीन चैनल 16 पर स्विच करें और प्रति घंटे संपर्क सुनिश्चित करें।
-5. **जनरेटर सुरक्षा**: स्नो-बैफल्स सक्रिय करें ताकि बर्फ से एयर फिल्टर जाम न हों।`
+**तत्काल कमान निर्देश:**
+1. **पूर्ण स्टेशन लॉकडाउन**: बाहर निकलना और वैज्ञानिक फील्ड अभियान तत्काल प्रभाव से बंद करें।
+2. **कार्मिक गणना (100% Muster)**: 15 मिनट के भीतर सभी आवास मॉड्यूल में कर्मियों की उपस्थिति सत्यापित करें।
+3. **लाइफलाइन का उपयोग**: मॉड्यूल के बीच आवागमन केवल दोहरी-कैराबिनर बंधी सुरक्षा रस्सियों (लाइफलाइन) द्वारा ही अनुमत है।
+4. **रेडियो चैनल**: आपातकालीन वीएचएफ चैनल 16 / पोलर सिम्प्लेक्स 1 पर संपर्क स्थापित कर प्रति घंटे रिपोर्टिंग सुनिश्चित करें।
+5. **जनरेटर सुरक्षा**: इंजन में बर्फ का पाउडर जमने से रोकने के लिए स्नो-हुड बैफल्स सक्रिय करें।
+6. **चिकित्सा तैयारी**: स्टेशन मेडिकल बे में हाइपोथर्मिया ट्राइएज क्षेत्र तैयार रखें।
+
+[Navigate to Emergency Response -> emergency] · [Check Live Weather -> weather]`
   },
 
   crevasseSOP: {
     en: `### 🚨 Crevasse Fall & Technical Rescue Protocol (SOP-CRV-02)
-**Immediate Response Actions:**
-1. **Arrest & Secure Anchors**: Vehicle stops immediately; drive two 90cm opposing aluminum snow pickets or deadman snow bollards at 45° angles.
-2. **Establish Contact**: Lower VHF radio and thermal bivvy to casualty. Confirm ABC (Airway, Breathing, Circulation) and injury severity.
-3. **Rig Hauling System**: Deploy a **3:1 Z-Rig** or **6:1 compound pulley** with progress capture prusiks / Petzl micro-traxion. Use an edge-roller on the lip.
-4. **Extraction & Triage**: Steady haul. Monitor for suspension trauma (keep knees bent if suspended >30 mins). Wrap in vapor barrier bag with active heat pads.`,
+**Immediate Rescue Response Actions:**
+1. **Arrest & Secure Anchors:** Self-arrest immediately; vehicle operators set emergency brake. Drive two 90cm aluminum snow pickets or deadman snow bollards at 45° opposing angles.
+2. **Establish Voice & Medical Contact:** Lower a VHF radio and lightweight thermal bivvy bag to the casualty. Confirm consciousness, ABC (Airway, Breathing, Circulation), and injury status.
+3. **Rig Mechanical Advantage Haul System:**
+   - Deploy a **3:1 Z-Rig** or **6:1 compound pulley** with progress capture prusiks / Petzl micro-traxion.
+   - Pad the crevasse lip with a rescue edge-roller or ski pole to prevent the rope from biting into the ice lip.
+4. **Extraction & Medical Triage:**
+   - Hoist the victim steadily. Monitor for harness suspension trauma (do not lay casualty flat immediately if suspended > 30 mins).
+   - Wrap immediately in vapor barrier bag and active chemical heat pads.
+   - Administer warm humidified oxygen and transfer to station surgical module.
+
+[Report Crevasse Incident -> emergency] · [View Expeditions -> expeditions]`,
     hinglish: `### 🚨 Crevasse Fall & Rescue Protocol (SOP-CRV-02)
-**Crevasse mein girne par rescue SOP:**
-1. **Anchors Lagayein**: Gaadi ya team turant brake lagaye; 45° angle par opposing snow pickets drive karein.
-2. **Contact Banayein**: Casualty ko radio aur thermal bivvy bag neeche bhejein; medical condition confirm karein.
-3. **Pulley System (3:1 Z-Rig)**: Hauling ke liye 3:1 Z-Rig ya 6:1 compound pulley rig karein. Crevasse ke lip par edge roller lagayein taaki rassi barf mein na kaate.
-4. **Rewarming**: Casualty ko nikalte hi active chemical heat pads aur vapor barrier bag mein wrap karein.`,
+**Crevasse (barf ki darar) mein girne par rescue protocol:**
+1. **Anchor System**: Vehicle turant brake lagaye; 45° opposing angle par do 90cm aluminum snow pickets drive karke deadman anchor rig karein.
+2. **Contact & ABC**: Casualty ko radio aur thermal bivvy bag neeche bhejein; Airway, Breathing, Consciousness check karein.
+3. **Mechanical Advantage Haul (3:1 Z-Rig)**:
+   - 3:1 Z-Rig ya 6:1 compound pulley system deploy karein progress capture prusiks ke sath.
+   - Rassi barf mein na kaate isliye crevasse lip par edge-roller lagayein.
+4. **Suspension Trauma Guard**: Casualty agar 30 min se zyada latka tha to use turant flat na litayein (knees bent rakhein). Active chemical heat pads aur vapor barrier mein wrap karein.
+
+[Report Crevasse Incident -> emergency] · [View Expeditions -> expeditions]`,
     hi: `### 🚨 हिमदरार (Crevasse) बचाव प्रोटोकॉल (SOP-CRV-02)
-**क्रेवास में गिरने पर तत्काल बचाव प्रक्रिया:**
-1. **एंकर स्थापित करें**: 45° कोण पर दो स्नो पिकेट्स गाड़कर मुख्य एंकर बनाएं।
-2. **संपर्क स्थापित करें**: घायल व्यक्ति तक वीएचएफ रेडियो और थर्मल बैग पहुंचाएं।
-3. **हॉलिंग सिस्टम (3:1 Z-Rig)**: 3:1 Z-रिग या 6:1 पुली सिस्टम तैयार करें और किनारे पर एज-रोलर लगाएं।
-4. **सुरक्षित निकासी**: व्यक्ति को बाहर निकालते ही केमिकल हीट पैड्स से सुरक्षित करें और मेडिकल बे में ले जाएं।`
+**हिमदरार में गिरने पर तकनीकी बचाव प्रक्रिया:**
+1. **एंकर स्थापित करें**: वाहन ऑपरेटर तुरंत ब्रेक लगाएं; 45° के विरोधी कोण पर दो 90 सेमी एल्यूमीनियम स्नो पिकेट्स गाड़कर मुख्य एंकर तैयार करें।
+2. **संपर्क स्थापित करें**: घायल व्यक्ति तक वीएचएफ रेडियो और थर्मल बैग पहुंचाएं; श्वसन (ABC) और चोट की स्थिति जांचें।
+3. **हॉलिंग सिस्टम (3:1 Z-Rig)**:
+   - 3:1 Z-रिग अथवा 6:1 कंपाउंड पुली सिस्टम तैयार करें।
+   - रस्सी को बर्फ में धंसने से बचाने के लिए किनारे पर एज-रोलर या स्की पोल लगाएं।
+4. **सस्पेंशन ट्रॉमा से बचाव**: यदि व्यक्ति 30 मिनट से अधिक लटका रहा हो तो उसे तुरंत सीधा न लिटाएं। रासायनिक हीट पैड और थर्मल बैग में लपेटकर तुरंत सर्जिकल बे में स्थानांतरित करें।
+
+[Report Crevasse Incident -> emergency] · [View Expeditions -> expeditions]`
   },
 
   frostbiteSOP: {
-    en: `### ❄️ Severe Frostbite & Hypothermia Stages (SOP-MED-03)
-• **Stage I (Mild, Core 32°C–35°C)**: Shivering, slurred speech. Action: Warm shelter, dry clothing, high-calorie sweet warm fluids.
-• **Stage II (Moderate, Core 28°C–32°C)**: Loss of shivering, confusion. Action: Active trunk rewarming, chemical heat packs on groin/axilla.
-• **Stage III (Severe, Core 24°C–28°C)**: Unconscious, rigid. Action: Gentle handling, warm humidified IV fluids, monitor for ventricular fibrillation.
-• **Frostbite Protocol**: Rapid rewarming in 37°C–39°C circulating water bath for 15–30 mins. NEVER rub frostbitten skin. Protect blisters with sterile bulky dressings.`,
+    en: `### ❄️ Severe Frostbite & Hypothermia Treatment Stages (SOP-MED-03)
+**Clinical Staging & Intervention Protocol:**
+
+| Hypothermia Stage | Core Temp / Clinical Presentation | Emergency Clinical Action Protocol |
+|---|---|---|
+| **Stage I (Mild)** | 32°C – 35°C (Violent shivering, alert, sluggish speech) | Dry windproof clothing, heated sleeping bag, warm high-calorie sweet glucose drinks. |
+| **Stage II (Moderate)** | 28°C – 32°C (Shivering ceases, confusion, apathy, stupor) | Active external trunk rewarming (forced-air blanket, chemical heat packs to axilla/groin). Handle very gently. |
+| **Stage III (Severe)** | < 28°C (Unconscious, rigid, severe bradycardia) | **High VFib Risk:** Avoid jostling. Warm humidified O₂, heated IV normal saline (40°C–42°C), urgent tele-consult with AFMC Pune / AIIMS. |
+
+**Frostbite Tissue Management:**
+- **NEVER** rub frozen tissue with snow, ice, or dry radiated heat.
+- **NEVER** initiate thawing in the field if there is ANY risk of refreezing during transit.
+- **Rapid Rewarming Water Bath:** Submerge affected extremities in agitated water maintained at **37°C – 39°C** for 30–45 minutes until skin is flush and pliable.
+- Apply sterile aloe vera dressing and loose non-adherent gauze between digits. Administer oral ibuprofen for antiprostaglandin anti-inflammatory action.
+
+[Open Medical Roster -> personnel] · [Emergency Dispatch -> emergency]`,
     hinglish: `### ❄️ Frostbite aur Hypothermia Treatment Stages (SOP-MED-03)
-• **Stage 1 (Mild, 32°C-35°C)**: Shivering aur kapkapi. Treatment: Dry kapde, warm sweet drinks, sleeping bag.
-• **Stage 2 (Moderate, 28°C-32°C)**: Kapkapi band hona, drowsiness. Treatment: Axilla aur groin par chemical heat packs lagayein.
-• **Stage 3 (Severe, 24°C-28°C)**: Behosh hona. Treatment: Warm humidified oxygen aur IV fluids, gentle handling.
-⚠️ **Frostbite Rules**: Barf ya haath se kabhie rub na karein! 37°C-39°C gungune paani mein 15-30 minute tak rewarm karein.`,
-    hi: `### ❄️ शीतदंश (Frostbite) और हाइपोथर्मिया उपचार (SOP-MED-03)
-• **स्टेज 1 (हल्का, 32°C-35°C)**: कंपकंपी होना। उपचार: सूखे कपड़े, गर्म मीठा पेय और स्लीपिंग बैग।
-• **स्टेज 2 (मध्यम, 28°C-32°C)**: कंपकंपी रुकना, भ्रम। उपचार: बगल और कमर पर केमिकल हीट पैक लगाएं।
-• **स्टेज 3 (गंभीर, 24°C-28°C)**: बेहोशी। उपचार: गर्म ऑक्सीजन और सावधानीपूर्वक हैंडलिंग।
-⚠️ **शीतदंश नियम**: प्रभावित त्वचा को कभी न रगड़ें! 37°C-39°C गुनगुने पानी में 15-30 मिनट तक रखें।`
+**Clinical Classification aur Medical Protocols:**
+
+| Stage | Core Body Temp / Lakshan | Treatment Protocol |
+|---|---|---|
+| **Mild (Stage 1)** | 32°C – 35°C (Tez kapkapi, hosh mein) | Dry kapde, warm sweet drinks, sleeping bag mein passive rewarming. |
+| **Moderate (Stage 2)** | 28°C – 32°C (Kapkapi band, behoshi jaisa) | Active trunk rewarming (axilla aur groin par chemical heat packs). Gentle handling. |
+| **Severe (Stage 3)** | < 28°C (Behosh, heart attack / VFib risk) | Rough movement na karein. Warm humidified oxygen, 40°C-42°C heated IV saline, AFMC Pune tele-consult. |
+
+**Frostbite Wound Care Rules:**
+• Barf ya haathon se kabhie rub na karein!
+• Refreezing ka risk ho to transit ke dauran thaw na karein.
+• **Water Bath**: Affected hisse ko **37°C – 39°C** gungune paani mein 30-45 minute submerge karein.
+• Ungliyon ke beech sterile gauze lagayein aur aloe vera dressing dein; inflammation ke liye ibuprofen dein.
+
+[Open Medical Roster -> personnel] · [Emergency Dispatch -> emergency]`,
+    hi: `### ❄️ शीतदंश (Frostbite) और हाइपोथर्मिया उपचार चरण (SOP-MED-03)
+**नैदानिक वर्गीकरण एवं उपचार प्रोटोकॉल:**
+
+| हाइपोथर्मिया चरण | शरीर का आंतरिक तापमान / लक्षण | आपातकालीन चिकित्सा प्रोटोकॉल |
+|---|---|---|
+| **स्टेज 1 (हल्का)** | 32°C – 35°C (तीव्र कंपकंपी, सचेत, धीमी बोली) | सूखे कपड़े, गर्म स्लीपिंग बैग, उच्च कैलोरी युक्त गर्म मीठा पेय। |
+| **स्टेज 2 (मध्यम)** | 28°C – 32°C (कंपकंपी रुकना, भ्रम, सुस्ती) | धड़ की सक्रिय री-वार्मिंग (बगल और कमर पर केमिकल हीट पैक लगाएं)। सावधानीपूर्वक संभालें। |
+| **स्टेज 3 (गंभीर)** | < 28°C (बेहोशी, नाड़ी मंद, कार्डियक अरेस्ट का खतरा) | **सावधानी:** हिलाएं-डुलाएं नहीं। गर्म नम ऑक्सीजन, 40°C-42°C गर्म आईवी सलाइन, एएफएमसी पुणे से टेली-परामर्श। |
+
+**शीतदंश (Frostbite) घाव प्रबंधन:**
+• प्रभावित त्वचा को कभी भी बर्फ या हाथों से न रगड़ें।
+• मार्ग में पुनः जमने का खतरा हो तो रास्ते में डी-फ्रॉस्ट न करें।
+• **री-वार्मिंग बाथ**: प्रभावित अंग को **37°C – 39°C** के गुनगुने पानी में 30–45 मिनट तक रखें जब तक त्वचा कोमल न हो जाए।
+• उंगलियों के बीच स्टेराइल गॉज लगाएं और सूजन कम करने हेतु इबुप्रोफेन दें।
+
+[Open Medical Roster -> personnel] · [Emergency Dispatch -> emergency]`
   },
 
   generatorSOP: {
-    en: `### ⚡ Station Generator Power Outage SOP (SOP-PWR-04)
-1. **Automatic Transfer**: Confirm secondary diesel genset start within 30 seconds.
-2. **Load Shedding**: Immediately cut non-essential circuits (workshops, sauna, drying rooms). Maintain life support, habitat heating, satellite comms, and medical bay.
-3. **Fuel Line Inspection**: Check for wax clogging / paraffin precipitation in diesel filters. Engage fuel pre-heaters.
-4. **Thermal Containment**: Seal all non-core doors to trap residual heat in central living quarters.`,
-    hinglish: `### ⚡ Generator Failure Emergency Response (SOP-PWR-04)
-1. **Secondary Genset**: Secondary backup diesel generator ka start 30 seconds mein verify karein.
-2. **Load Shedding**: Non-essential light aur equipment turant band karein; life support aur habitat heating preserve karein.
-3. **Fuel Lines**: Diesel fuel lines mein wax jamming check karein aur fuel pre-heaters on karein.
-4. **Heat Trap**: Sabhi unnecessary kamre band karke main living pod mein heat preserve karein.`,
-    hi: `### ⚡ जनरेटर विफलता आपातकालीन प्रक्रिया (SOP-PWR-04)
-1. **बैकअप जनरेटर**: 30 सेकंड के भीतर द्वितीयक डीजल जनरेटर चालू करें।
-2. **लोड शेडिंग**: गैर-ज़रूरी बिजली तत्काल काटें; केवल हीटिंग, चिकित्सा और संचार चालू रखें।
-3. **ईंधन लाइन जांच**: ईंधन फिल्टर में मोम जमने की जांच करें और प्री-हीटर चालू करें।
-4. **थर्मल सुरक्षा**: सभी अनावश्यक दरवाजे बंद कर मुख्य क्वार्टर में गर्मी सुरक्षित रखें।`
+    en: `### ⚡ Station Generator Failure & Heating Loss Protocol (SOP-ENG-04)
+**Critical Countdown:** Indoor thermal envelope drops below 0°C within 3–5 hours without central hydronic heating.
+
+**Emergency Power Recovery Procedures:**
+1. **Auto-Failover Verification:** Confirm secondary 250 kVA Caterpillar/Cummins diesel generator took the station bus bar within 30 seconds.
+2. **Manual Cold-Start Sequence:** If auto-start failed, dispatch two engineering mechanics with pre-heated ether/glow-plug booster packs.
+3. **Life Support Load Shedding Hierarchy:**
+   - Immediately cut non-essential circuits: science labs, drill containers, satellite uplinks, and exterior floodlights.
+   - Maintain 100% bus capacity strictly dedicated to: **Habitation Module HVAC**, **Priyadarshini Lake trace-heating**, and **Station Surgical Bay**.
+4. **Water Pipeline Protection:** If Lake Priyadarshini water pump line drops below +2°C, activate emergency drain valves to prevent ice rupturing 1.2 km of insulated heat-traced pipeline.
+
+[Inspect Engineering Inventory -> inventory] · [View Station Matrix -> weather]`,
+    hinglish: `### ⚡ Generator Failure & Power Outage SOP (SOP-ENG-04)
+**Thermal Threat:** Central heating band hone par station ka internal temperature 3-5 ghante mein 0°C se neeche gir jata hai.
+
+**Emergency Power Recovery Steps:**
+1. **Auto-Transfer**: Verify karein ki secondary 250 kVA diesel generator 30 seconds mein bus bar par aaya ya nahi.
+2. **Manual Start**: Auto-start fail hone par engineering mechanics ko glow-plug booster aur pre-heated ether ke sath dispatch karein.
+3. **Load Shedding**: Labs, drilling rig, aur exterior lights turant cut karein. Sirf Living Quarters HVAC, Priyadarshini water line heating, aur Medical Bay chalu rakhein.
+4. **Lake Line Drain**: Agar Priyadarshini fresh water pipe ka temp +2°C se neeche jaye, to turant drain valve open karein taaki 1.2 km lambi pipeline burst na ho.
+
+[Inspect Engineering Inventory -> inventory] · [View Station Matrix -> weather]`,
+    hi: `### ⚡ जनरेटर विफलता और हीटिंग सुरक्षा प्रोटोकॉल (SOP-ENG-04)
+**तापीय संकट:** हीटिंग रुकने पर स्टेशन का तापमान 3-5 घंटे के भीतर शून्य से नीचे गिर जाता है।
+
+**आपातकालीन बिजली बहाली प्रक्रिया:**
+1. **ऑटो-ट्रांसफर सत्यापन**: जांचें कि द्वितीयक 250 kVA डीजल जनरेटर 30 सेकंड में बस बार पर चालू हुआ या नहीं।
+2. **मैनुअल स्टार्ट**: ऑटो-स्टार्ट विफल होने पर इंजीनियर प्री-हीटेड ईथर व ग्लो-प्लग बूस्टर के साथ जनरेटर चालू करें।
+3. **लोड शेडिंग**: प्रयोगशालाओं, ड्रिलिंग रिग और बाहरी रोशनी को तुरंत बंद करें। केवल मुख्य आवास हीटिंग, प्रियदर्शिनी पाइपलाइन और मेडिकल बे को बिजली दें।
+4. **पाइपलाइन सुरक्षा**: यदि प्रियदर्शिनी ताजे पानी की लाइन का तापमान +2°C से नीचे गिरे, तो तुरंत ड्रेन वाल्व खोलें ताकि 1.2 किमी पाइपलाइन बर्फ से फटने से बच सके।
+
+[Inspect Engineering Inventory -> inventory] · [View Station Matrix -> weather]`
   },
 
   fireSOP: {
-    en: `### 🔥 Habitat Fire Suppression Protocol (SOP-FIR-05)
-1. **Alarm & Isolation**: Sound continuous siren; trip HVAC ventilation to starve fire of airflow.
-2. **Personnel Evacuation**: Muster all hands at the secondary emergency module / snow shelter within 3 minutes.
-3. **Fire Suppression**: Discharge Inergen / CO2 gas systems in equipment bays; deploy dry chemical ABC extinguishers. Water freezing prohibits conventional hydrants.`,
-    hinglish: `### 🔥 Station Fire Suppression Protocol (SOP-FIR-05)
-1. **Siren & Air Cut**: Alarm bajayein aur HVAC ventilation turant shut karein taaki aag ko oxygen na mile.
-2. **Evacuation**: 3 minute ke andar sabhi personnel secondary survival shelter module mein shift hon.
-3. **Extinguishers**: Inergen/CO2 gas flooding aur dry powder extinguishers use karein (paani jamne ki wajah se water hoses use nahi hote).`,
-    hi: `### 🔥 आवास अग्नि शमन प्रोटोकॉल (SOP-FIR-05)
-1. **सायरन और वायु नियंत्रण**: आपातकालीन अलार्म बजाएं और वेंटिलेशन तुरंत बंद करें ताकि आग को ऑक्सीजन न मिले।
-2. **निकासी**: 3 मिनट के भीतर सभी सदस्य द्वितीयक आपातकालीन मॉड्यूल में एकत्रित हों।
-3. **अग्नि शमन**: केवल इनरजेन/CO2 और ड्राई केमिकल पाउडर का उपयोग करें (पानी जमने के कारण पानी का उपयोग नहीं होता)।`
+    en: `### 🔥 Habitat Fire & Smoke Suppression Protocol (SOP-SAF-06)
+**Extreme Hazard:** Sub-zero external air produces hyper-dry indoor humidity (15–20%), causing near-explosive flame propagation in enclosed modules.
+
+**Emergency Fire Procedures:**
+1. **Alarm & Zone Isolation:** Trip master alarm; automatic magnetic fire doors seal the affected module within 15 seconds.
+2. **HVAC Air Cutoff:** Immediately trip ventilation fans to starve combustion of fresh oxygen.
+3. **Suppression Agents:** Discharge Clean Agent (FM-200 / Inergen / Novec 1230) gas flooding in mechanical spaces; deploy dry chemical ABC powder extinguishers. **NEVER use plain water** near high-voltage heating banks or fuel lines.
+4. **Muster & Thermal Protection:** Evacuate to Emergency Survival Shelter / Living Annex within 3 minutes. **Mandatory:** All personnel must don full ECW (Extreme Cold Weather) parkas before exiting into sub-zero exterior.
+
+[Open Emergency Response -> emergency]`,
+    hinglish: `### 🔥 Station Fire Suppression Protocol (SOP-SAF-06)
+**Hazard**: Polar dry air (15-20% humidity) ki wajah se aag modules mein explosive speed se failti hai.
+
+1. **Alarm & Isolation**: Master fire alarm bajayein; magnetic fire doors 15 seconds mein seal ho jayenge.
+2. **Air Cutoff**: HVAC ventilation turant shut karein taaki aag ko oxygen na mile.
+3. **Suppression**: Clean Agent (FM-200/Inergen) gas flooding aur dry powder extinguishers use karein. Paani jamne aur high voltage hone ki wajah se water hoses use nahi hote.
+4. **Muster with ECW**: Sabhi log 3 minute mein secondary emergency shelter mein evacuate karein. Bahar sub-zero cold mein nikalne se pehle Extreme Cold Weather (ECW) parkas pehanna anivarya hai.
+
+[Open Emergency Response -> emergency]`,
+    hi: `### 🔥 आवास अग्नि शमन और निकासी प्रोटोकॉल (SOP-SAF-06)
+**जोखिम:** ध्रुवीय शुष्क हवा (15-20% आर्द्रता) के कारण संलग्न कमरों में आग अत्यंत तीव्र गति से फैलती है।
+
+1. **अलार्म और आइसोलेशन**: मुख्य फायर अलार्म चालू करें; स्वचालित फायर दरवाजे 15 सेकंड में प्रभावित कमरे को सील कर देंगे।
+2. **वेंटिलेशन बंद**: ऑक्सीजन की आपूर्ति रोकने के लिए एचवीएसी वेंटिलेशन तुरंत बंद करें।
+3. **शमन एजेंट**: क्लीन एजेंट (FM-200/Inergen) गैस फ्लडिंग और ड्राई केमिकल पाउडर का उपयोग करें। पानी कभी न डालें।
+4. **निकासी व थर्मल सुरक्षा**: 3 मिनट के भीतर द्वितीयक आश्रय में एकत्र हों। बाहर निकलने से पहले पूर्ण ईसीडब्ल्यू (ECW) ध्रुवीय जैकेट पहनना अनिवार्य है।
+
+[Open Emergency Response -> emergency]`
   },
 
   fuelSOP: {
-    en: `### ⛽ Fuel Paraffinization & Low Temperature Management (SOP-FUL-06)
-1. **Cold-Flow Limits**: Standard automotive diesel freezes at -15°C. Antarctic stations use **Polar Grade Low-Wax Diesel (ATF / Jet-A1 blend)** treated with anti-icing FSII additives (effective to -50°C).
-2. **Paraffin Clotting**: If fuel clouds or filters plug, activate tank trace-heating cables and heat trace jackets on suction lines.`,
-    hinglish: `### ⛽ Fuel Freezing aur Paraffin Prevention (SOP-FUL-06)
-1. **Polar Fuel Grade**: Antarctica mein regular diesel freeze ho jata hai; isliye special **Low-Wax Polar Diesel (Jet-A1 mix)** use hota hai jo -50°C tak liquid rehta hai.
-2. **Line Heating**: Filter mein wax jama hone par trace heating coils activate kiye jate hain.`,
-    hi: `### ⛽ ईंधन जमने से बचाव प्रोटोकॉल (SOP-FUL-06)
-1. **पोलर ग्रेड ईंधन**: अंटार्कटिका में सामान्य डीजल -15°C पर जम जाता है, इसलिए विशेष लो-वैक्स पोलर डीजल (Jet-A1 मिश्रण) का उपयोग होता है जो -50°C तक तरल रहता है।
-2. **ट्रेस हीटिंग**: पाइपलाइन और फिल्टर में मोम जमने पर हीटिंग कॉइल चालू किए जाते हैं।`
+    en: `### ⛽ Polar Fuel Contamination & Paraffinization SOP (SOP-ENG-05)
+**Fuel Specification:** Stations require Polar-Grade Kerosene-Diluted Diesel (D-A / Jet A-1 blend) with pour point < -50°C and FSII anti-icing additives.
+
+**Contamination Symptoms:** Wax crystallization in fuel filters, engine surging, and black exhaust smoke.
+
+**Remediation Steps:**
+1. **Day-Tank Failover:** Switch engine fuel supply lines to the indoor heated reserve day-tank reservoir.
+2. **Isolate Bulk Storage:** Isolate external storage bladders and run the centrifuge fuel polishing filtration unit.
+3. **Filter Replacement:** Replace primary 10-micron water-separator cartridge filters.
+4. **Trace-Heating:** Energize electrical trace-heating jackets on external fuel transfer lines.
+
+[Inspect Fuel Stock -> inventory]`,
+    hinglish: `### ⛽ Polar Fuel Freezing & Filter Care (SOP-ENG-05)
+1. **Fuel Specification**: Antarctica mein special **Low-Wax Polar Diesel (Jet A-1 mix)** use hota hai jo -50°C tak liquid rehta hai FSII anti-icing additive ke sath.
+2. **Waxing Symptoms**: Engine ka rpm fluctuate hona, filter mein white wax jamna, aur kala dhuan aana.
+3. **Action Steps**:
+   - Day-tanks ko indoor heated tank par switch karein.
+   - Centrifuge fuel polishing unit run karein.
+   - 10-micron water separator filters replace karein aur fuel trace-heating coils activate karein.
+
+[Inspect Fuel Stock -> inventory]`,
+    hi: `### ⛽ ईंधन जमने व मोम (Paraffin) से बचाव प्रोटोकॉल (SOP-ENG-05)
+1. **ईंधन विनिर्देश**: अंटार्कटिका में विशेष लो-वैक्स पोलर डीजल (Jet A-1 मिश्रण) का उपयोग होता है जो FSII एडिटिव के साथ -50°C तक तरल रहता है।
+2. **मोम जमने के लक्षण**: इंजन की गति में उतार-चढ़ाव, फिल्टर जाम होना और काला धुआं निकलना।
+3. **उपचारात्मक कदम**:
+   - ईंधन आपूर्ति को इनडोर गर्म डे-टैंक पर स्विच करें।
+   - सेंट्रीफ्यूज फ्यूल पॉलिशिंग यूनिट चालू करें।
+   - 10-माइक्रोन वॉटर-सेपरेटर फिल्टर बदलें और पाइपलाइन हीटिंग सक्रिय करें।
+
+[Inspect Fuel Stock -> inventory]`
   },
 
   traverseSOP: {
-    en: `### 🚛 Overland Traverse Safety Protocol (SOP-TRV-07)
-1. **Convoy Rule**: Minimum of 2 tracked vehicles (PistenBully / Kassbohrer) per traverse. Solo travel is strictly prohibited.
-2. **Crevasse Radar**: Lead vehicle must operate Ground Penetrating Radar (GPR) boom continuously.
-3. **Comms & Beacon**: Iridium satcom automated check-in every 15 minutes; mandatory 30-day emergency rations aboard sleds.`,
-    hinglish: `### 🚛 Overland Traverse Safety Checklist (SOP-TRV-07)
-1. **Convoy Rule**: Kabhie bhi akele gaadi na le jayein. Hamesha kam se kam 2 PistenBully vehicles sath chalenge.
-2. **GPR Radar**: Aage chalne wali vehicle par Ground Penetrating Radar on rahega jo crevasse detect karta hai.
-3. **Satphone & Tracking**: Har 15 minute mein satellite check-in ping bhejna anivarya hai. 30 din ka emergency food sled par hona chahiye.`,
-    hi: `### 🚛 ओवरलैंड काफिला सुरक्षा नियम (SOP-TRV-07)
-1. **काफिला नियम**: कम से कम दो पिस्टन-बुली (PistenBully) वाहन हमेशा साथ चलेंगे। अकेले यात्रा सख्त वर्जित है।
-2. **रडार सुरक्षा**: आगे चलने वाले वाहन पर ग्राउंड पेनेट्रेटिंग रडार (GPR) चालू रहेगा जो हिमदरार की पहचान करता है।
-3. **उपग्रह ट्रैकिंग**: हर 15 मिनट में उपग्रह संपर्क अनिवार्य है और 30 दिन का आपातकालीन राशन साथ होना चाहिए।`
+    en: `### 🚛 Overland Traverse Protocols & Convoy Safety (SOP-TRV-07)
+**Mandatory Convoy Directives (PistenBully / Kassbohrer):**
+- **Convoy Rule:** Minimum 2 tracked vehicles. Solo travel outside the 2 km station perimeter is strictly prohibited.
+- **Spacing:** 100m – 150m vehicle separation over glacier ice to distribute bridge loads.
+- **Crevasse Radar:** Lead vehicle must operate 400 MHz Ground Penetrating Radar (GPR) boom continuously.
+- **Snow Bridge Rule:** Crossing permitted only on verified bridges with snow thickness ≥ 2.5× vehicle track width.
+- **Speed Limits:** Max 15 km/h over blue ice / sastrugi fields; 25 km/h on groomed snow highways.
+- **Whiteout Halt:** Park vehicles 45° nose-to-tail to form a windbreak shelter and remain inside cabs.
+
+**Pre-Traverse Departure Checklist:**
+1. Ground Penetrating Radar (GPR) calibration check.
+2. Winch wire integrity and opposing snow picket deadman anchors verified.
+3. Auxiliary fuel sled hitched with emergency disconnect release pins.
+4. Iridium satellite beacon tested and pinging headquarters every 15 minutes.
+5. 30 days of freeze-dried rations and medical trauma kits loaded per vehicle.
+
+[Track Expeditions on Map -> map] · [Expedition Details -> expeditions]`,
+    hinglish: `### 🚛 Overland Traverse Safety Protocols (SOP-TRV-07)
+**PistenBully Convoy Rules:**
+• **Convoy Rule**: Hamesha kam se kam 2 tracked vehicles sath chalenge. Akele nikalna strictly banned hai.
+• **Distance**: Gaadiyon ke beech 100m–150m spacing maintain karein taaki ice bridges par load distribute rahe.
+• **GPR Radar**: Lead vehicle par 400 MHz Ground Penetrating Radar on rahega jo crevasse detect karta hai.
+• **Speed Limit**: Blue ice par max 15 km/h, groomed snow par 25 km/h.
+• **Whiteout Action**: Agar visibility khatam ho jaye to dono gaadiyon ko 45° nose-to-tail park karke windbreak shelter banayein aur cab ke andar rahein.
+
+**Checklist**:
+1. GPR radar test pass.
+2. Aux fuel sled aur winch wire check.
+3. Satellite tracker har 15 min ping kar raha ho.
+4. 30 din ka emergency food aur medical trauma kit onboard ho.
+
+[Track Expeditions on Map -> map] · [Expedition Details -> expeditions]`,
+    hi: `### 🚛 ओवरलैंड काफिला सुरक्षा नियम व चेकलिस्ट (SOP-TRV-07)
+**पिस्टन-बुली (PistenBully) काफिला नियम:**
+• **काफिला नियम**: कम से कम दो वाहन हमेशा साथ चलेंगे। स्टेशन परिधि से बाहर अकेले यात्रा पूर्णतः वर्जित है।
+• **दूरी**: बर्फ के पुलों पर भार बांटने के लिए वाहनों के बीच 100 से 150 मीटर की दूरी रखें।
+• **जीपीआर रडार**: अग्रणी वाहन पर 400 मेगाहर्ट्ज ग्राउंड पेनेट्रेटिंग रडार लगातार सक्रिय रहेगा।
+• **गति सीमा**: नीली बर्फ और सास्ट्रूगी पर अधिकतम 15 किमी/घंटा; ग्रूम्ड स्नो पर 25 किमी/घंटा।
+• **व्हाइटआउट**: तूफान में वाहनों को 45° कोण पर आमने-सामने खड़ा कर विंडब्रेक बनाएं और केबिन के अंदर रहें।
+
+**प्रस्थान पूर्व चेकलिस्ट:**
+1. जीपीआर रडार कैलिब्रेशन।
+2. विंच तार और स्नो पिकेट एंकर की जांच।
+3. उपग्रह बीकन (हर 15 मिनट में सिग्नल) का सत्यापन।
+4. प्रति वाहन 30 दिनों का सूखा राशन और मेडिकल ट्रॉमा किट।
+
+[Track Expeditions on Map -> map] · [Expedition Details -> expeditions]`
   },
 
   maitriStation: {
-    en: `### 🏢 Maitri Station — Detailed Operational Profile
-• **Location**: Schirmacher Oasis, Queen Maud Land, East Antarctica (70°45'57"S, 11°44'09"E).
-• **Commissioned**: 1988–1989 (India's 2nd station, oldest active permanent base).
-• **Capacity**: 25 wintering crew / 65 summer scientists.
-• **Primary Science**: Geomagnetism, atmospheric ozone monitoring, meteorology (WMO 89514), glaciology, solid earth geophysics.
-• **Life Support**: Freshwater sourced from Lake Priyadarshini; diesel-generator power plant; sewage treatment plant.`,
-    hinglish: `### 🏢 Maitri Station Profile
-• **Location**: Schirmacher Oasis, Antarctica (70.77°S, 11.73°E).
-• **History**: 1989 mein shuru hui; India ki sabse purani active research station hai.
-• **Capacity**: 25 log winter mein, 65 log summer mein.
-• **Research**: Geomagnetism, weather telemetry, ozone depletion studies.
-• **Water Source**: Priyadarshini freshwater lake.`,
-    hi: `### 🏢 मैत्री स्टेशन — विस्तृत जानकारी
-• **स्थिति**: शिरमाकर ओएसिस, अंटार्कटिका (70°45'57"S, 11°44'09"E)।
-• **स्थापना**: 1988-1989 (भारत का सबसे पुराना सक्रिय स्थाई अनुसंधान केंद्र)।
-• **क्षमता**: शीतकाल में 25 सदस्य / ग्रीष्मकाल में 65 वैज्ञानिक।
-• **अनुसंधान**: भू-चुंबकत्व, वायुमंडलीय ओजोन निगरानी, मौसम विज्ञान (WMO 89514)।
-• **जल आपूर्ति**: प्रियदर्शिनी ताजे पानी की झील से।`
+    en: `### 🏔️ Maitri Research Station — Authoritative Facility Profile
+• **Coordinates:** 70°45'58"S, 11°43'56"E (Elevation: 117 m MSL).
+• **Geographic Sector:** Schirmacher Oasis, Queen Maud Land, East Antarctica.
+• **Commissioning:** 1989 (8th Indian Scientific Expedition to Antarctica). India's oldest active permanent research station, succeeding Dakshin Gangotri.
+• **Crew Capacity:** 25 wintering crew (overwintering) / up to 65 summer scientists and engineers.
+• **Infrastructure & Life Support:**
+  - **Power Generation:** Redundant 250 kVA Caterpillar/Cummins diesel gensets with closed-loop glycol hydronic waste-heat recovery.
+  - **Freshwater Supply:** Year-round pumping from Lake Priyadarshini via 1.2 km electrically heat-traced, insulated pipelines.
+  - **Environmental Systems:** Biological Membrane Bioreactor (MBR) wastewater treatment plant complying with Madrid Protocol Annex III.
+  - **Communications:** Dedicated C-band and Ku-band SATCOM earth station with high-bandwidth Iridium backup.
+• **Scientific Domains:** Geomagnetism, atmospheric ozone monitoring, meteorology (WMO 89514), glaciology, solid earth geophysics, and biology.
+
+[Inspect Weather Matrix -> weather] · [View Station Roster -> personnel]`,
+    hinglish: `### 🏔️ Maitri Station Profile (70.77°S, 11.73°E)
+• **Location**: Schirmacher Oasis, Queen Maud Land, Antarctica (117m MSL).
+• **History**: 1989 (8th ISEA) mein shuru hui; Bharat ki sabse purani active year-round research station hai.
+• **Capacity**: 25 crew winter mein, 65 scientists summer mein.
+• **Power & Water**: 250 kVA Cat/Cummins gensets; Lake Priyadarshini se 1.2 km lambi heat-traced pipeline se fresh water pumping.
+• **Comms**: Ku-band SATCOM earth station aur satellite telemetry.
+• **Research**: Ozone layer, geomagnetism, atmospheric science, aur glaciology.
+
+[Inspect Weather Matrix -> weather] · [View Station Roster -> personnel]`,
+    hi: `### 🏔️ मैत्री अनुसंधान केंद्र (Maitri Research Station)
+• **भौगोलिक स्थिति**: 70°45'58"S, 11°43'56"E (ऊंचाई: 117 मीटर MSL), शिरमाकर ओएसिस, पूर्वी अंटार्कटिका।
+• **स्थापना**: 1989 (8वां भारतीय अंटार्कटिक अभियान)। दक्षिण गंगोत्री के बाद भारत का सबसे पुराना सक्रिय स्थाई केंद्र।
+• **क्षमता**: शीतकाल में 25 सदस्य, ग्रीष्मकाल में 65 वैज्ञानिक।
+• **जीवन रक्षक प्रणाली**:
+  - 250 kVA कैटरपिलर/कमिंस डीजल जनरेटर संयंत्र।
+  - प्रियदर्शिनी झील से 1.2 किमी लंबी विद्युत ताप-युक्त (Heat-traced) पाइपलाइन द्वारा वर्ष भर ताजे पानी की आपूर्ति।
+  - मैड्रिड प्रोटोकॉल के अनुरूप जैविक अपशिष्ट जल उपचार संयंत्र (MBR)।
+  - सी-बैंड व कू-बैंड उपग्रह संचार सुविधा।
+• **प्रमुख शोध**: भू-चुंबकत्व, ओजोन परत निगरानी, मौसम विज्ञान (WMO 89514), और हिमनद विज्ञान।
+
+[Inspect Weather Matrix -> weather] · [View Station Roster -> personnel]`
   },
 
   bharatiStation: {
-    en: `### 🏢 Bharati Station — Detailed Operational Profile
-• **Location**: Larsemann Hills, East Antarctica (69°24'28"S, 76°11'14"E).
-• **Commissioned**: 2012 (India's modern 3rd polar station).
-• **Design**: Aerodynamic stilt-mounted ISO container architecture engineered to prevent snowdrift burial.
-• **Capacity**: 47 personnel year-round.
-• **Key Feature**: High-speed satellite ground station for ISRO Remote Sensing satellites (Cartosat, Resourcesat).
-• **Meteorology**: WMO Index 89512.`,
-    hinglish: `### 🏢 Bharati Station Profile
-• **Location**: Larsemann Hills, East Antarctica (69.41°S, 76.19°E).
-• **Commissioned**: 2012 mein banayi gayi modern aerodynamic station.
-• **Capacity**: 47 personnel year-round.
-• **Key Specialty**: ISRO satellite data reception center jo Cartosat aur Resourcesat se live data download karta hai.`,
-    hi: `### 🏢 भारती स्टेशन — विस्तृत जानकारी
-• **स्थिति**: लार्समैन हिल्स, पूर्वी अंटार्कटिका (69°24'28"S, 76°11'14"E)।
-• **स्थापना**: 2012 (अत्याधुनिक एरोडायनामिक कंटेनर संरचना)।
+    en: `### 🏔️ Bharati Research Station — Authoritative Facility Profile
+• **Coordinates:** 69°24'28"S, 76°11'14"E (Elevation: 35 m MSL).
+• **Geographic Sector:** Larsemann Hills, East Antarctica (Coastal Promontory).
+• **Commissioning:** 2012 (31st Indian Scientific Expedition to Antarctica).
+• **Architectural Engineering:** State-of-the-art 3-story aerodynamic structure built from 134 prefabricated ISO containers, elevated on hydraulic steel stilts to prevent snowdrift burial and katabatic turbulence.
+• **Crew Capacity:** 47 personnel year-round.
+• **Specialized Capabilities:**
+  - **ISRO Ground Station:** High-speed direct telemetry reception facility for ISRO / National Remote Sensing Centre (NRSC) Earth observation satellites (CARTOSAT, OCEANSAT, RISAT).
+  - **Energy Efficiency:** Combined Heat and Power (CHP) cogeneration plant burning polar-grade fuel at near-zero emissions.
+  - **Environmental Compliance:** Complete zero-liquid discharge (ZLD) greywater recycling system.
+• **Scientific Domains:** Coastal oceanography, marine biology, satellite geodesy, space weather, and atmospheric sciences (WMO 89512).
+
+[Inspect Weather Matrix -> weather] · [View Station Roster -> personnel]`,
+    hinglish: `### 🏔️ Bharati Station Profile (69.41°S, 76.19°E)
+• **Location**: Larsemann Hills, East Antarctica (35m MSL).
+• **Commissioned**: 2012 (31st ISEA). India ki sabse modern 3-story polar station.
+• **Architecture**: 134 ISO containers se banayi gayi elevated stilt building jo barf ke tufan mein nahi dabti.
+• **Capacity**: 47 personnel saal bhar reh sakte hain.
+• **ISRO Earth Station**: ISRO ke remote sensing satellites (Cartosat, Oceansat) se live data reception center.
+• **Research**: Oceanography, marine biology, aur atmospheric weather (WMO 89512).
+
+[Inspect Weather Matrix -> weather] · [View Station Roster -> personnel]`,
+    hi: `### 🏔️ भारती अनुसंधान केंद्र (Bharati Research Station)
+• **भौगोलिक स्थिति**: 69°24'28"S, 76°11'14"E (ऊंचाई: 35 मीटर MSL), लार्समैन हिल्स, पूर्वी अंटार्कटिका।
+• **स्थापना**: 2012 (31वां भारतीय अंटार्कटिक अभियान)।
+• **संरचनात्मक इंजीनियरिंग**: 134 प्री-फैब्रिकेटेड आईएसओ कंटेनरों से निर्मित 3-मंजिला एरोडायनामिक इमारत, जो बर्फ के तूफान में दबने से बचाने के लिए हाइड्रोलिक स्टील के खंभों (Stilts) पर स्थित है।
 • **क्षमता**: 47 सदस्य वर्ष भर।
-• **विशेषता**: इसरो (ISRO) रिमोट सेंसिंग उपग्रहों (Cartosat आदि) के लिए ग्राउंड डेटा स्टेशन।`
+• **विशेष क्षमताएं**:
+  - **इसरो ग्राउंड स्टेशन**: इसरो / राष्ट्रीय रिमोट सेंसिंग सेंटर (NRSC) के उपग्रहों (कार्टोसैट, ओशनसैट) के लिए हाई-स्पीड डेटा रिसीविंग स्टेशन।
+  - पर्यावरण के अनुकूल कंबाइंड हीट एंड पावर (CHP) संयंत्र और जीरो-लिक्विड डिस्चार्ज जल पुनर्चक्रण।
+• **प्रमुख शोध**: तटीय समुद्र विज्ञान, समुद्री जीव विज्ञान, उपग्रह जियोडेसी और मौसम विज्ञान (WMO 89512)।
+
+[Inspect Weather Matrix -> weather] · [View Station Roster -> personnel]`
   },
 
   himadriStation: {
-    en: `### 🏢 Himadri Station — Arctic Research Base
-• **Location**: Ny-Ålesund, Spitsbergen, Svalbard, Norway (78°55'N, 11°56'E).
-• **Inaugurated**: July 2008 (India's premier Arctic station).
-• **Focus**: Arctic climate change, aerosol characterization, marine microbiology, Kongsvegen Glacier mass balance.`,
-    hinglish: `### 🏢 Himadri Station Profile (Arctic)
-• **Location**: Ny-Ålesund, Svalbard, Norway (78.92°N, 11.93°E).
-• **Inaugurated**: 2008 mein shuru hui.
-• **Focus**: Arctic climate change, glacier melting, aur marine microbiology.`,
-    hi: `### 🏢 हिमाद्रि स्टेशन — आर्कटिक अनुसंधान केंद्र
-• **स्थिति**: नी-ओलेसुंड, स्वालबार्ड, नॉर्वे (78°55'N, 11°56'E)।
-• **स्थापना**: 2008 (भारत का पहला आर्कटिक अनुसंधान केंद्र)।
-• **प्रमुख कार्य**: आर्कटिक जलवायु परिवर्तन, ग्लेशियर अध्ययन और समुद्री सूक्ष्म जीव विज्ञान।`
+    en: `### 🏔️ Himadri Research Station — Arctic Scientific Base
+• **Coordinates:** 78°55'N, 11°56'E.
+• **Geographic Sector:** Ny-Ålesund, Spitsbergen, Svalbard, Norway (78.9°N).
+• **Inauguration:** 2 July 2008 (India's premier permanent Arctic research station).
+• **Scientific Mission:**
+  - Arctic climate teleconnections with the Indian Monsoon system.
+  - Aerosol characterization, atmospheric trace gas monitoring, and optical depth.
+  - Marine microbiology and biogeochemical fjord dynamics in Kongsfjorden.
+  - Mass balance and velocity measurements of Kongsvegen Glacier.
+
+[Inspect Weather Matrix -> weather] · [View Station Roster -> personnel]`,
+    hinglish: `### 🏔️ Himadri Station Profile (Arctic, 78.9°N)
+• **Location**: Ny-Ålesund, Spitsbergen, Svalbard, Norway.
+• **Inauguration**: 2 July 2008. Bharat ka pehla Arctic research base.
+• **Mission**: Arctic climate changes ka Indian Monsoon par asar, glacier melting, atmospheric aerosol studies, aur marine microbiology.
+
+[Inspect Weather Matrix -> weather] · [View Station Roster -> personnel]`,
+    hi: `### 🏔️ हिमाद्रि अनुसंधान केंद्र (Himadri Arctic Station)
+• **भौगोलिक स्थिति**: 78°55'N, 11°56'E, नी-ओलेसुंड, स्पिट्सबर्गेन, स्वालबार्ड, नॉर्वे।
+• **स्थापना**: 2 जुलाई 2008। भारत का पहला स्थाई आर्कटिक अनुसंधान केंद्र।
+• **वैज्ञानिक उद्देश्य**:
+  - आर्कटिक जलवायु परिवर्तन का भारतीय मानसून प्रणाली पर प्रभाव।
+  - एरोसोल लक्षण वर्णन और वायुमंडलीय गैस निगरानी।
+  - कॉंग्सफ्योर्डन (Kongsfjorden) में समुद्री सूक्ष्म जीव विज्ञान और कॉंग्सवेगेन ग्लेशियर का अध्ययन।
+
+[Inspect Weather Matrix -> weather] · [View Station Roster -> personnel]`
   },
 
   dakshinGangotri: {
-    en: `### 🏛️ Dakshin Gangotri — India's Historic 1st Base
-• **Location**: Princess Astrid Coast, Antarctica (70°05'S, 12°00'E).
-• **History**: Constructed during the 3rd Indian Antarctic Expedition (1983–1984).
-• **Decommissioning**: Buried beneath perpetual ice in 1990; now protected as a historic site and emergency supply depot.`,
-    hinglish: `### 🏛️ Dakshin Gangotri (Historical Base)
-• **History**: India ka pehla Antarctic base jo 1983-1984 mein bana tha.
-• **Status**: 1990 mein barf ke neeche dab jaane ki wajah se band hua. Ab ye ek historic site aur emergency transit depot hai.`,
-    hi: `### 🏛️ दक्षिण गंगोत्री — भारत का पहला ऐतिहासिक केंद्र
-• **स्थापना**: 1983-1984 (तीसरे भारतीय अंटार्कटिक अभियान के दौरान निर्मित)।
-• **वर्तमान स्थिति**: 1990 में बर्फ के नीचे दबने के कारण इसे ऐतिहासिक स्मारक और आपातकालीन ट्रांजिट डिपो घोषित किया गया।`
+    en: `### 🏛️ Dakshin Gangotri — India's Historic 1st Antarctic Station
+• **Coordinates:** 70°05'S, 12°00'E.
+• **Location:** Princess Astrid Coast, Queen Maud Land, Antarctica.
+• **History:** Commissioned on 26 January 1984 during the 3rd Indian Antarctic Expedition.
+• **Status:** Decommissioned in 1990 after being submerged under 8+ meters of perpetual ice. Now preserved as a designated Historic Site and Monument (HSM No. 44) under the Antarctic Treaty System and utilized as an unmanned summer transit fuel depot.`,
+    hinglish: `### 🏛️ Dakshin Gangotri (Historic 1st Station)
+• **History**: 26 January 1984 ko 3rd ISEA ke dauran inaugurate hui thi.
+• **Status**: 1990 mein barf ke neeche dab jaane ki wajah se decommission kar di gayi. Ab ye ek protected Historic Site (HSM No. 44) aur emergency summer transit depot hai.`,
+    hi: `### 🏛️ दक्षिण गंगोत्री — भारत का ऐतिहासिक पहला अनुसंधान केंद्र
+• **स्थापना**: 26 जनवरी 1984 (तीसरे भारतीय अंटार्कटिक अभियान के दौरान)।
+• **वर्तमान स्थिति**: 1990 में 8 मीटर से अधिक बर्फ के नीचे दबने के कारण इसे सेवामुक्त किया गया। अब यह अंटार्कटिक संधि प्रणाली के तहत संरक्षित ऐतिहासिक स्मारक (HSM No. 44) और ग्रीष्मकालीन ट्रांजिट ईंधन डिपो है।`
+  },
+
+  indarc: {
+    en: `### 🌊 IndARC — India's Moored Arctic Ocean Observatory
+• **Coordinates:** 78°59'N, 12°01'E.
+• **Location:** Kongsfjorden, Svalbard (Arctic Ocean), moored at 192 meters water depth.
+• **Deployment:** Deployed in July 2014 as India's first multi-sensor underwater moored observatory in the Arctic.
+• **Scientific Focus:** Collects real-time continuous oceanographic telemetry on Arctic seawater temperature, salinity, ocean currents, and Arctic-Monsoon linkages throughout the polar night.`,
+    hinglish: `### 🌊 IndARC Arctic Moored Observatory
+• **Location**: Kongsfjorden, Svalbard, Arctic (192m depth underwater).
+• **Deployment**: July 2014 mein deploy kiya gaya Bharat ka pehla underwater observatory.
+• **Research**: Polar night ke dauran ocean temperature, salinity, aur Indian monsoon connections ko continuously record karta hai.`,
+    hi: `### 🌊 इंड-आर्क (IndARC) — भारत की आर्कटिक महासागरीय वेधशाला
+• **स्थिति**: कॉंग्सफ्योर्डन, स्वालबार्ड (192 मीटर जल गहराई में स्थित)।
+• **स्थापना**: जुलाई 2014 में भारत की पहली बहु-सेंसरीय अंतर्जलीय वेधशाला के रूप में स्थापित।
+• **उद्देश्य**: ध्रुवीय रात्रि के दौरान आर्कटिक जल तापमान, लवणता, महासागरीय धाराओं और भारतीय मानसून के साथ इसके संबंधों का निरंतर डेटा संकलन।`
   },
 
   antarcticTreaty: {
-    en: `### 📜 Antarctic Treaty System (ATS) & Scientific Governance
-• **The Treaty**: Signed in Washington on 1 December 1959 (in force 1961). India acceded in 1983 and gained Consultative Status.
-• **Key Principles**:
-  1. Freedom of scientific investigation and complete scientific cooperation.
-  2. Use of Antarctica strictly for peaceful purposes; bans military bases, weapons testing, and nuclear waste disposal.
-• **Madrid Protocol (1991)**: Comprehensive environmental protection; strictly prohibits mineral and petroleum extraction.`,
-    hinglish: `### 📜 Antarctic Treaty System (ATS)
-• **Antarctic Treaty**: 1959 mein sign hua tha. Antarctica ko shanti aur scientific research ke liye dedicate kiya gaya hai.
-• **Core Rules**: Military activities aur mining par 100% ban hai.
-• **Madrid Protocol**: Antarctica ke fragile paryavaran ki raksha karta hai. India iska active consultative member hai.`,
-    hi: `### 📜 अंटार्कटिक संधि प्रणाली (Antarctic Treaty System)
-• **अंटार्कटिक संधि**: 1959 में हस्ताक्षरित (1961 में प्रभावी)। भारत 1983 में शामिल हुआ।
-• **मुख्य नियम**:
-  1. अंटार्कटिका का उपयोग केवल शांति और विज्ञान के लिए होगा।
-  2. सैन्य गतिविधियों, परमाणु कचरे और खनन पर पूर्ण प्रतिबंध है।
-• **मैड्रिड प्रोटोकॉल**: पर्यावरण संरक्षण के कड़े नियम लागू करता है।`
+    en: `### 📜 Antarctic Treaty System (ATS) & Environmental Governance
+• **The Treaty:** Signed in Washington on 1 December 1959 (entered into force 23 June 1961). India acceded in 1983 and gained Consultative Party status.
+• **Core Principles:**
+  1. Complete freedom of scientific investigation and international scientific data exchange.
+  2. Strict peaceful use: complete ban on military fortifications, weapons testing, nuclear explosions, and radioactive waste disposal.
+• **Madrid Protocol (1991):** Environmental Protocol designating Antarctica as a "natural reserve devoted to peace and science". Indefinitely bans all mineral extraction and commercial mining.
+• **Governance Mandate:** All expedition operations must complete Environmental Impact Assessments (EIA) under COMNAP (Council of Managers of National Antarctic Programs) guidelines.`,
+    hinglish: `### 📜 Antarctic Treaty System (ATS) & Madrid Protocol
+• **Antarctic Treaty**: 1959 mein sign hua (1961 se active). India 1983 mein Consultative Member bana.
+• **Core Rules**: Military activities, weapons testing, aur nuclear waste par 100% ban hai.
+• **Madrid Protocol (1991)**: Antarctica mein mining aur mineral extraction par permanent ban lagata hai aur paryavaran ki raksha karta hai.`,
+    hi: `### 📜 अंटार्कटिक संधि प्रणाली और मैड्रिड प्रोटोकॉल (ATS)
+• **अंटार्कटिक संधि**: 1959 में हस्ताक्षरित। भारत 1983 में शामिल हुआ और परामर्शी सदस्य (Consultative Party) बना।
+• **मूल सिद्धांत**:
+  1. वैज्ञानिक अनुसंधान की पूर्ण स्वतंत्रता और अंतरराष्ट्रीय सहयोग।
+  2. शांतिपूर्ण उपयोग: सैन्य गतिविधियों, हथियारों के परीक्षण और परमाणु कचरे पर पूर्ण प्रतिबंध।
+• **मैड्रिड प्रोटोकॉल (1991)**: अंटार्कटिका में खनन और खनिज दोहन पर अनिश्चितकालीन प्रतिबंध लगाता है।`
   },
 
   ncpor: {
-    en: `### 🏛️ NCPOR & MoES — Institutional Custodians
-• **NCPOR**: National Centre for Polar and Ocean Research, located at Vasco da Gama, Goa, India.
-• **Parent Ministry**: Ministry of Earth Sciences (MoES), Government of India.
-• **Mandate**: Nodal agency coordinating Indian Antarctic (ISEA), Arctic, Southern Ocean, and Himalayan cryosphere research programs.`,
-    hinglish: `### 🏛️ NCPOR aur MoES
-• **NCPOR**: National Centre for Polar and Ocean Research, Goa.
-• **Ministry**: Ministry of Earth Sciences (MoES), Bharat Sarkar.
-• **Role**: Bharat ke sabhi Antarctic, Arctic, aur Southern Ocean expeditions ko plan aur operate karta hai.`,
-    hi: `### 🏛️ एनसीपीओआर और पृथ्वी विज्ञान मंत्रालय (NCPOR & MoES)
+    en: `### 🏛️ NCPOR & MoES — Institutional Polar Custodians
+• **NCPOR:** National Centre for Polar and Ocean Research, situated at Vasco da Gama, Goa, India.
+• **Parent Ministry:** Ministry of Earth Sciences (MoES), Government of India.
+• **National Mandate:** Autonomous R&D institution responsible for overall coordination and implementation of the Indian Antarctic Programme (ISEA), Arctic expeditions, Southern Ocean surveys, and Himalayan glaciological programmes.
+• **Logistics Infrastructure:** Manages ice-class charter vessels (*MV Vasiliy Golovnin*), air-bridges from Cape Town Gateway, and maintains permanent year-round infrastructure at Maitri, Bharati, and Himadri.`,
+    hinglish: `### 🏛️ NCPOR aur Ministry of Earth Sciences (MoES)
+• **NCPOR**: National Centre for Polar and Ocean Research, Vasco da Gama, Goa.
+• **Ministry**: Ministry of Earth Sciences (MoES), Government of India.
+• **Role**: Bharat ke sabhi Antarctic (ISEA), Arctic (Himadri), Southern Ocean, aur Himalaya expeditions ka nodal management centre hai. Cape Town air-bridge aur icebreaker vessels ko coordinate karta hai.`,
+    hi: `### 🏛️ राष्ट्रीय ध्रुवीय एवं महासागर अनुसंधान केंद्र (NCPOR & MoES)
 • **एनसीपीओआर (NCPOR)**: नेशनल सेंटर फॉर पोलर एंड ओशन रिसर्च, वास्को-डि-गामा, गोवा।
 • **मंत्रालय**: पृथ्वी विज्ञान मंत्रालय (MoES), भारत सरकार।
-• **दायित्व**: भारत के सभी अंटार्कटिक, आर्कटिक और दक्षिणी महासागर अभियानों का नोडल संचालन।`
+• **दायित्व**: भारतीय अंटार्कटिक अभियान (ISEA), आर्कटिक (हिमाद्रि), दक्षिणी महासागर और हिमालयी हिमनद कार्यक्रमों का संपूर्ण परिचालन और प्रबंधन।`
   }
 }
 

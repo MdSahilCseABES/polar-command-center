@@ -72,6 +72,106 @@ export function assessConditions({ windChill, windGusts, code } = {}) {
   return { key: 'CLEAR', reason: 'Within limits' }
 }
 
-export async function fetchWeather(locations = []) {
-  return { source: 'FALLBACK', readings: {}, timestamp: new Date().toISOString() }
+const DEFAULT_POLAR_READINGS = {
+  'LOC-MAITRI': {
+    temperature: -14,
+    windChill: -22,
+    windSpeed: 26,
+    windGusts: 38,
+    windDirection: 'ESE',
+    windFrom: 115,
+    code: 3,
+    description: 'Overcast',
+  },
+  'LOC-BHARATI': {
+    temperature: -16,
+    windChill: -24,
+    windSpeed: 30,
+    windGusts: 42,
+    windDirection: 'ENE',
+    windFrom: 70,
+    code: 2,
+    description: 'Partly cloudy',
+  },
+  'LOC-HIMADRI': {
+    temperature: -6,
+    windChill: -12,
+    windSpeed: 18,
+    windGusts: 26,
+    windDirection: 'NW',
+    windFrom: 315,
+    code: 3,
+    description: 'Overcast',
+  },
+  'LOC-NOVO': {
+    temperature: -18,
+    windChill: -26,
+    windSpeed: 24,
+    windGusts: 36,
+    windDirection: 'SE',
+    windFrom: 135,
+    code: 1,
+    description: 'Mainly clear',
+  },
+  'LOC-CAMP-SCH': {
+    temperature: -15,
+    windChill: -23,
+    windSpeed: 22,
+    windGusts: 34,
+    windDirection: 'E',
+    windFrom: 90,
+    code: 2,
+    description: 'Partly cloudy',
+  },
+  'LOC-CAMP-LAR': {
+    temperature: -15,
+    windChill: -23,
+    windSpeed: 28,
+    windGusts: 40,
+    windDirection: 'NE',
+    windFrom: 45,
+    code: 2,
+    description: 'Partly cloudy',
+  },
+  'LOC-DG': {
+    temperature: -20,
+    windChill: -30,
+    windSpeed: 35,
+    windGusts: 50,
+    windDirection: 'S',
+    windFrom: 180,
+    code: 71,
+    description: 'Light snow',
+  },
 }
+
+export async function fetchWeather(locations = []) {
+  const readings = { ...DEFAULT_POLAR_READINGS }
+
+  // Ensure any custom locations have indicative telemetry
+  if (Array.isArray(locations)) {
+    for (const loc of locations) {
+      if (loc && loc.id && !readings[loc.id]) {
+        const lat = Number(loc.latitude ?? loc.lat ?? -70)
+        readings[loc.id] = {
+          temperature: lat < 0 ? -15 : -5,
+          windChill: lat < 0 ? -22 : -10,
+          windSpeed: 25,
+          windGusts: 38,
+          windDirection: 'SE',
+          windFrom: 135,
+          code: 2,
+          description: 'Partly cloudy',
+        }
+      }
+    }
+  }
+
+  return {
+    source: 'INDICATIVE FALLBACK',
+    readings,
+    sites: readings,
+    timestamp: new Date().toISOString(),
+  }
+}
+

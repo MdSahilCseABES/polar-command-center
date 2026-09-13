@@ -1,5 +1,5 @@
 // src/services/aiCopilotService.js
-import { processOperationsQuery } from '../polar-ai-assistant/src/index.js'
+import { processOperationsQuery } from '../polar-ai-assistant/src/core/operationsIntelligence.js'
 /**
  * AURORA — POLAR COMMAND CENTER AUTONOMOUS INTELLIGENCE SERVICE
  * =============================================================
@@ -423,7 +423,45 @@ The Polar Command Center provides real-time meteorological observation feeds and
 [View Official Research & Provenance Specs -> sources] · [Inspect Weather Matrix -> weather]`;
   }
 
-  // 16. GENERAL / MISSION STATUS FALLBACK
+  // 16. ANTARCTIC TREATY & MADRID PROTOCOL
+  if (q.includes('treaty') || q.includes('madrid protocol') || q.includes('ats') || q.includes('governance')) {
+    return `### 📜 Antarctic Treaty System (ATS) & Environmental Governance
+
+- **The Antarctic Treaty (1959):** Signed in Washington on 1 December 1959 (entered into force 1961). India acceded in 1983 and attained Consultative Party status.
+- **Fundamental Principles:**
+  1. Complete freedom of scientific investigation and international scientific data exchange.
+  2. Strict peaceful use: complete ban on military fortifications, weapons testing, nuclear explosions, and radioactive waste disposal.
+- **Madrid Protocol on Environmental Protection (1991):** Designates Antarctica as a "natural reserve devoted to peace and science". Indefinitely bans all commercial mineral extraction and mining.
+- **Governance Mandate:** All expedition operations must complete comprehensive Environmental Impact Assessments (EIA) under COMNAP (Council of Managers of National Antarctic Programs) guidelines.
+
+[View Official Research & Provenance Specs -> sources]`;
+  }
+
+  // 17. NCPOR & MINISTRY OF EARTH SCIENCES (MoES)
+  if (q.includes('ncpor') || q.includes('moes') || q.includes('ministry') || q.includes('custodian')) {
+    return `### 🏛️ National Centre for Polar and Ocean Research (NCPOR / MoES)
+
+- **Institution:** National Centre for Polar and Ocean Research (NCPOR), Headquartered at Vasco da Gama, Goa, India.
+- **Parent Ministry:** Ministry of Earth Sciences (MoES), Government of India.
+- **National Mandate:** Autonomous R&D institution responsible for overall planning, logistics coordination, and scientific execution of the Indian Antarctic Programme (ISEA), Arctic expeditions (Himadri), Southern Ocean expeditions, and Himalayan cryosphere research.
+- **Logistics Operations:** Commissions ice-class charter vessels (*MV Vasiliy Golovnin*), coordinates Cape Town DROMLAN air-bridge flights to Novo Runway, and maintains year-round base operations at Maitri, Bharati, and Himadri.
+
+[View Official Research & Provenance Specs -> sources] · [Open Operations Dashboard -> dashboard]`;
+  }
+
+  // 18. SYSTEM ARCHITECTURE & 360 MAP
+  if (q.includes('continuoustilelayer') || q.includes('360 map') || q.includes('tile layer') || q.includes('globe') || q.includes('tech stack') || q.includes('architecture')) {
+    return `### 💻 Polar Command Center System & GIS Architecture
+
+- **Omnidirectional 360° ContinuousTileLayer:** Custom Leaflet layer extension that wraps coordinates across both horizontal and vertical axes modulo $2^z$, eliminating Web Mercator polar edge blue voids.
+- **3D WebGL Globe (Three.js):** True spherical Earth geometry with procedural bathymetric ocean depth, dynamic starfield, and 3D telemetry pin projections.
+- **Real-Time Data Layer:** React 18 Concurrent state with unified \`DataContext\` & \`AuthContext\`, with instant offline demo fallback.
+- **Resilient Offline Architecture:** Non-volatile session caching in \`sessionStorage\` with in-memory fallback for private browsing.
+
+[Open 360° Live Map -> map] · [View Operations Dashboard -> dashboard]`;
+  }
+
+  // 19. GENERAL / MISSION STATUS FALLBACK
   return `### 🧠 AURORA Polar Operations Copilot Briefing
 
 I have analyzed your query across all live command center telemetry streams:
@@ -514,10 +552,26 @@ When referencing specific modules, you may include bracketed links like [Navigat
 export async function askCopilot(query, data, apiKey) {
   const timestamp = new Date().toISOString();
 
-  // 1. Run through the portable Operations Intelligence Engine first
+  // 1. If user provided a Gemini API Key, try online model first with rich live context
+  if (apiKey && apiKey.trim().length > 10) {
+    try {
+      const contextSummary = buildOperationalContext(data);
+      const geminiResponse = await queryGeminiAPI(query, contextSummary, apiKey.trim());
+      return {
+        response: geminiResponse,
+        source: 'gemini',
+        timestamp
+      };
+    } catch (apiError) {
+      console.warn('Gemini API call failed, activating local autonomous engine:', apiError);
+      // Seamlessly falls through to local autonomous engine below
+    }
+  }
+
+  // 2. Run through the portable Operations Intelligence Engine
   try {
     const opResult = await processOperationsQuery(query, data);
-    if (opResult && opResult.handled && opResult.reply) {
+    if (opResult && opResult.handled && opResult.reply && !opResult.isFallback) {
       return {
         response: opResult.reply,
         source: 'local',
@@ -529,30 +583,7 @@ export async function askCopilot(query, data, apiKey) {
     console.warn('Portable operations query engine error:', err);
   }
 
-  const contextSummary = buildOperationalContext(data);
-
-  // If user provided a Gemini API Key, try online model
-  if (apiKey && apiKey.trim().length > 10) {
-    try {
-      const geminiResponse = await queryGeminiAPI(query, contextSummary, apiKey.trim());
-      return {
-        response: geminiResponse,
-        source: 'gemini',
-        timestamp
-      };
-    } catch (apiError) {
-      console.warn('Gemini API call failed, activating local autonomous engine:', apiError);
-      // Seamless fallback to local reasoning engine
-      const fallbackResponse = processQuery(query, data);
-      return {
-        response: `${fallbackResponse}\n\n*(Note: Cloud AI connection unavailable; answered using Autonomous Local Intelligence Engine)*`,
-        source: 'local',
-        timestamp
-      };
-    }
-  }
-
-  // Offline / instant local intelligence engine
+  // 3. Fall back to specialized polar domain intelligence engine
   const localResponse = processQuery(query, data);
   return {
     response: localResponse,

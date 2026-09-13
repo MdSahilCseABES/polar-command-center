@@ -1,0 +1,44 @@
+{
+  "name": "polar-ai-assistant",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Portable, project-aware operational AI Assistant system for POLAR Command Center applications.",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./adapter": "./src/adapters/projectDataAdapter.js",
+    "./engine": "./src/core/operationsIntelligence.js",
+    "./query": "./src/core/projectQueryEngine.js",
+    "./api": "./src/api/chat.js",
+    "./styles": "./src/components/AIChatbot/chatbot.css"
+  },
+  "scripts": {
+    "test": "node example/test_standalone_assistant.js",
+    "build": "vite build"
+  },
+  "keywords": [
+    "polar",
+    "ai-assistant",
+    "operational-intelligence",
+    "query-engine",
+    "telemetry",
+    "react",
+    "hinglish"
+  ],
+  "author": "POLAR Command Center Engineering Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "dependencies": {
+    "lucide-react": "^1.16.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite": "^5.1.4"
+  }
+}

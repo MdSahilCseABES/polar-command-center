@@ -1,0 +1,1572 @@
+/* ============================================================
+   POLAR COMMAND CENTER — design system
+   ============================================================
+
+   These three @tailwind lines pull in Tailwind's utility classes.
+   Do not remove them.
+
+   Everything below them is our own design system, ported from the
+   v1 prototype (legacy/public/styles.css) so the look is preserved.
+
+   HOW THE STYLING WORKS IN THIS PROJECT (two tools, on purpose):
+     1. Tailwind utility classes    -> layout. e.g. "flex gap-4 p-5"
+     2. Our own component classes   -> appearance. e.g. "card" "badge"
+
+   That split keeps the JSX readable. You get short layout classes
+   instead of thirty utilities glued together on every card.
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- 1. TOKENS ----------
+   Every colour and font in the app comes from this one block.
+   Change a value here and it updates everywhere. This is why the
+   app looks consistent instead of looking like a template.
+
+   Subject: a field-operations command console for polar logistics.
+   Palette: clean snow-white surfaces, arctic sky-blue accent,
+            vibrant signal colours for alerts and status.
+   Type:    Oswald   - condensed display, console headers
+            Inter    - body and UI text
+            JetBrains Mono - data: IDs, timestamps, coordinates, quantities
+*/
+:root {
+  /* Surfaces, lightest to mid-tones */
+  --surface-base: #F8FAFB;
+  --surface-card: #FFFFFF;
+  --surface-raised: #F1F5F9;
+  --surface-sunken: #E2E8F0;
+  --surface-hover: #F8FAFC;
+  --surface-active: #EFF6FF;
+
+  /* Keep legacy names mapped for any remaining references */
+  --navy-950: #F8FAFB;
+  --navy-900: #FFFFFF;
+  --navy-850: #F1F5F9;
+  --navy-800: #E2E8F0;
+  --navy-700: #CBD5E1;
+  --navy-600: #94A3B8;
+  --line: #E2E8F0;
+  --line-soft: #F1F5F9;
+
+  /* Accent + signal colours */
+  --ice: #0EA5E9;
+  --ice-dim: #7DD3FC;
+  --orange: #F97316;
+  --amber: #F59E0B;
+  --green: #22C55E;
+  --red: #EF4444;
+  --blue: #3B82F6;
+  --violet: #8B5CF6;
+
+  /* Text, highest to lowest emphasis */
+  --ink-hi: #0F172A;
+  --ink-mid: #64748B;
+  --ink-low: #94A3B8;
+
+  --font-display: 'Oswald', 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius: 8px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* Compatibility aliases for provenance & research components */
+  --primary: #0EA5E9;
+  --cyan: #06B6D4;
+  --border: #E2E8F0;
+  --surface: #FFFFFF;
+  --text: #0F172A;
+  --text-hi: #0F172A;
+  --text-muted: #64748B;
+}
+
+/* ---------- 2. CYAN THEME (ARCTIC CYAN DARK) ----------
+   Activated by setting data-theme="cyan" (or "dark") on <html>.
+   Deep arctic cyan-to-dark command center palette. */
+[data-theme="dark"],
+[data-theme="cyan"] {
+  --surface-base: #030C12;
+  --surface-card: #071723;
+  --surface-raised: #0C2333;
+  --surface-sunken: #05131C;
+  --surface-hover: #0F2B3E;
+  --surface-active: #12334A;
+
+  --navy-950: #030C12;
+  --navy-900: #071723;
+  --navy-850: #0C2333;
+  --navy-800: #112F43;
+  --navy-700: #19445E;
+  --navy-600: #256082;
+  --line: #153E57;
+  --line-soft: #0E2A3C;
+
+  --ice: #06B6D4;
+  --ice-dim: #0891B2;
+  --cyan: #22D3EE;
+  --orange: #FF6A3D;
+  --amber: #E8B84B;
+  --green: #10B981;
+  --red: #F43F5E;
+  --blue: #38BDF8;
+  --violet: #A78BFA;
+
+  --ink-hi: #ECFEFF;
+  --ink-mid: #A5F3FC;
+  --ink-low: #67E8F9;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.65);
+
+  --chart-grid: #0E2A3C;
+  --chart-label: #A5F3FC;
+  --chart-note: #A5F3FC;
+  --chart-tick: #67E8F9;
+  --chart-cursor: rgba(6, 182, 212, 0.12);
+
+  /* Compatibility aliases for provenance & research components */
+  --primary: #06B6D4;
+  --border: #153E57;
+  --surface: #071723;
+  --text: #ECFEFF;
+  --text-hi: #ECFEFF;
+  --text-muted: #A5F3FC;
+}
+
+/* Cyan mode body background pattern — luminous arctic cyan glow and tactical grid */
+[data-theme="dark"] body,
+[data-theme="cyan"] body {
+  background-color: var(--surface-base);
+  background-image:
+    radial-gradient(ellipse at 25% 10%, rgba(6, 182, 212, 0.09), transparent 50%),
+    radial-gradient(ellipse at 80% 85%, rgba(8, 145, 178, 0.06), transparent 50%),
+    repeating-linear-gradient(0deg, rgba(6, 182, 212, 0.02) 0px, rgba(6, 182, 212, 0.02) 1px, transparent 1px, transparent 48px),
+    repeating-linear-gradient(90deg, rgba(6, 182, 212, 0.02) 0px, rgba(6, 182, 212, 0.02) 1px, transparent 1px, transparent 48px);
+  background-repeat: no-repeat, no-repeat, repeat, repeat;
+}
+
+/* Cyan mode scrollbar */
+[data-theme="dark"] ::-webkit-scrollbar-track,
+[data-theme="cyan"] ::-webkit-scrollbar-track { background: #030C12; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb,
+[data-theme="cyan"] ::-webkit-scrollbar-thumb { background: #153E57; border-color: #030C12; border-radius: 4px; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover,
+[data-theme="cyan"] ::-webkit-scrollbar-thumb:hover { background: #0891B2; }
+
+/* ---------- 3. BLACK THEME (PURE PITCH BLACK / AMOLED STEALTH) ----------
+   Activated by setting data-theme="black" on <html>.
+   Completely dark 100% black palette for high-contrast night operations. */
+[data-theme="black"] {
+  --surface-base: #000000;
+  --surface-card: #080808;
+  --surface-raised: #121212;
+  --surface-sunken: #040404;
+  --surface-hover: #181818;
+  --surface-active: #202020;
+
+  --navy-950: #000000;
+  --navy-900: #080808;
+  --navy-850: #121212;
+  --navy-800: #1A1A1A;
+  --navy-700: #262626;
+  --navy-600: #383838;
+  --line: #222222;
+  --line-soft: #141414;
+
+  --ice: #38BDF8;
+  --ice-dim: #0284C7;
+  --cyan: #22D3EE;
+  --orange: #FF6A3D;
+  --amber: #F59E0B;
+  --green: #10B981;
+  --red: #F43F5E;
+  --blue: #38BDF8;
+  --violet: #A78BFA;
+
+  --ink-hi: #FFFFFF;
+  --ink-mid: #A1A1AA;
+  --ink-low: #71717A;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.9);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.95);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 1);
+
+  --chart-grid: #1A1A1A;
+  --chart-label: #A1A1AA;
+  --chart-note: #A1A1AA;
+  --chart-tick: #71717A;
+  --chart-cursor: rgba(255, 255, 255, 0.08);
+
+  --primary: #38BDF8;
+  --border: #222222;
+  --surface: #080808;
+  --text: #FFFFFF;
+  --text-hi: #FFFFFF;
+  --text-muted: #A1A1AA;
+}
+
+/* Black mode body background pattern — ultra-minimalist stealth grid */
+[data-theme="black"] body {
+  background-color: #000000;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, 0.03), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0px, rgba(255, 255, 255, 0.012) 1px, transparent 1px, transparent 48px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.012) 0px, rgba(255, 255, 255, 0.012) 1px, transparent 1px, transparent 48px);
+  background-repeat: no-repeat, repeat, repeat;
+}
+
+/* Black mode scrollbar */
+[data-theme="black"] ::-webkit-scrollbar-track { background: #000000; }
+[data-theme="black"] ::-webkit-scrollbar-thumb { background: #222222; border-color: #000000; border-radius: 4px; }
+[data-theme="black"] ::-webkit-scrollbar-thumb:hover { background: #333333; }
+/* ---------- 2. BASE ---------- */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* min-height, NOT height. With `height: 100%` the app would be locked to
+     exactly one screen tall and every longer page would spill out of its
+     own box — which quietly breaks anything that needs a real height to
+     measure against, such as the Leaflet map container. */
+  html,
+  body {
+    min-height: 100%;
+  }
+  #root {
+    min-height: 100vh;
+  }
+
+  body {
+    background-color: var(--surface-base);
+    color: var(--ink-hi);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+
+    /* Subtle clean pattern — very faint dotted grid */
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(14, 165, 233, 0.04), transparent 50%),
+      radial-gradient(circle at 80% 90%, rgba(139, 92, 246, 0.03), transparent 50%);
+    background-repeat: no-repeat;
+  }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  /* Keyboard users must always be able to see where they are. */
+  :focus-visible {
+    outline: 2px solid var(--ice);
+    outline-offset: 2px;
+  }
+
+  /* Scrollbars, styled to match the light theme. */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--surface-base);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+    border: 2px solid var(--surface-base);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+  }
+}
+
+/* ---------- 3. COMPONENT CLASSES ---------- */
+  /* --- Cards and panels --- */
+  .card {
+    background-color: var(--surface-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+    /* min-width: 0 is essential, not cosmetic.
+       A card is usually a grid or flex item, and those default to
+       `min-width: auto` — meaning they refuse to shrink below the widest
+       thing inside them. A wide table would therefore stretch the card
+       past the edge of a phone screen instead of scrolling inside it.
+       Setting 0 here lets .table-scroll do its job. */
+    min-width: 0;
+  }
+
+  .card-tight {
+    background-color: var(--surface-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+    min-width: 0;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  /* Card that is itself a button/link — lifts slightly on hover. */
+  .card-interactive {
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.15s ease;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+  }
+  .card-interactive:hover {
+    border-color: var(--ice-dim);
+    background-color: var(--surface-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .panel-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 14px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-hi);
+  }
+
+  .panel-subtitle {
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--ink-low);
+  }
+
+  /* Small uppercase label used above values and section groups. */
+  .eyebrow {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-low);
+  }
+
+  /* --- Stat cards (the big numbers on the dashboard) --- */
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink-hi);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-value--warn {
+    color: var(--amber);
+  }
+  .stat-value--alert {
+    color: var(--orange);
+  }
+  .stat-value--ok {
+    color: var(--green);
+  }
+
+  /* --- Tables --- */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .data-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--surface-card);
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-low);
+    border-bottom: 2px solid var(--line);
+    white-space: nowrap;
+  }
+  .data-table tbody td {
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--line-soft);
+    color: var(--ink-mid);
+    vertical-align: middle;
+  }
+  .data-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .data-table tbody tr:hover {
+    background-color: var(--surface-hover);
+  }
+  .data-table .cell-strong {
+    color: var(--ink-hi);
+    font-weight: 500;
+  }
+
+  /* IDs, dates and coordinates must never break across two lines —
+     "EXP-001" split over two rows looks like a bug. */
+  .data-table td.mono {
+    white-space: nowrap;
+  }
+
+  /* Wrapper that lets wide tables scroll sideways on small screens
+     and vertically when constrained, without breaking or overlapping
+     surrounding cards. */
+  .table-scroll {
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line) transparent;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .table-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .table-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+  }
+  .table-scroll::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 3px;
+  }
+  .table-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--ice);
+  }
+
+  /* --- Status badges --- */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: transform 0.12s ease;
+  }
+  .badge--ok {
+    background-color: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #16A34A;
+  }
+  .badge--info {
+    background-color: rgba(14, 165, 233, 0.1);
+    border-color: rgba(14, 165, 233, 0.3);
+    color: #0284C7;
+  }
+  .badge--blue {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: #2563EB;
+  }
+  .badge--warn {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: #D97706;
+  }
+  .badge--alert {
+    background-color: rgba(249, 115, 22, 0.1);
+    border-color: rgba(249, 115, 22, 0.3);
+    color: #EA580C;
+  }
+  .badge--critical {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #DC2626;
+  }
+  .badge--violet {
+    background-color: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.3);
+    color: #7C3AED;
+  }
+  .badge--muted {
+    background-color: rgba(100, 116, 139, 0.08);
+    border-color: rgba(100, 116, 139, 0.2);
+    color: var(--ink-mid);
+  }
+
+  /* --- Status dots --- */
+  .dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot--ok {
+    background-color: var(--green);
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+  }
+  .dot--warn {
+    background-color: var(--amber);
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+  }
+  .dot--alert {
+    background-color: var(--orange);
+    box-shadow: 0 0 6px rgba(249, 115, 22, 0.4);
+  }
+  .dot--info {
+    background-color: var(--ice);
+    box-shadow: 0 0 6px rgba(14, 165, 233, 0.4);
+  }
+  .dot--muted {
+    background-color: var(--ink-low);
+  }
+
+  /* --- Buttons --- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border: 1px solid var(--ice);
+    border-radius: var(--radius);
+    background-color: rgba(14, 165, 233, 0.06);
+    color: var(--ice);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      transform 0.1s ease,
+      box-shadow 0.15s ease,
+      opacity 0.15s ease;
+  }
+  .btn:hover:not(:disabled) {
+    background-color: rgba(14, 165, 233, 0.12);
+    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.15);
+    transform: translateY(-1px);
+  }
+  .btn:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .btn--alert {
+    border-color: var(--orange);
+    background-color: rgba(249, 115, 22, 0.08);
+    color: var(--orange);
+  }
+  .btn--alert:hover:not(:disabled) {
+    background-color: rgba(249, 115, 22, 0.15);
+    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.15);
+  }
+
+  .btn--ghost {
+    border-color: var(--line);
+    background-color: transparent;
+    color: var(--ink-mid);
+  }
+  .btn--ghost:hover:not(:disabled) {
+    border-color: #CBD5E1;
+    color: var(--ink-hi);
+    background-color: var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn--sm {
+    padding: 5px 10px;
+    font-size: 11.5px;
+  }
+
+  /* --- Form fields --- */
+  .field-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-low);
+    font-weight: 500;
+  }
+
+  .input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background-color: var(--surface-card);
+    color: var(--ink-hi);
+    font-family: var(--font-body);
+    font-size: 13px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .input:focus {
+    border-color: var(--ice);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+  }
+  .input::placeholder {
+    color: var(--ink-low);
+  }
+  textarea.input {
+    min-height: 68px;
+    resize: vertical;
+  }
+
+  /* Small inline <select> used inside table rows to change a status. */
+  .select-inline {
+    padding: 4px 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background-color: var(--surface-card);
+    color: var(--ink-hi);
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+  .select-inline:focus {
+    border-color: var(--ice);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+  }
+
+  /* A field this role is not allowed to use — see src/lib/roles.js.
+     DIMMED, NOT HIDDEN, and that is the point: a read-only session must
+     still be able to READ the value. Hiding the select would hide the
+     status it is showing, which is information the scientist needs. */
+  .input:disabled,
+  textarea.input:disabled,
+  .select-inline:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background-color: var(--surface-raised);
+  }
+
+  /* --- Empty / loading / error states --- */
+  .state-block {
+    padding: 36px 20px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    text-align: center;
+    color: var(--ink-low);
+    font-size: 13px;
+    background-color: var(--surface-raised);
+  }
+  .state-block strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--ink-mid);
+    font-size: 14px;
+  }
+
+  /* --- Utility text classes --- */
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .text-hi {
+    color: var(--ink-hi);
+  }
+  .text-mid {
+    color: var(--ink-mid);
+  }
+  .text-low {
+    color: var(--ink-low);
+  }
+
+  /* --- Sidebar navigation ---
+     One button per module. The active one gets a rounded pill background,
+     which is how you always know where you are in the console. */
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 12px;
+    border: 0;
+    border-radius: var(--radius);
+    margin: 2px 8px;
+    width: calc(100% - 16px);
+    background: transparent;
+    color: var(--ink-mid);
+    font-family: var(--font-body);
+    font-size: 13px;
+    text-align: left;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  }
+  .nav-item:hover {
+    background: var(--surface-raised);
+    color: var(--ink-hi);
+  }
+  .nav-item--active {
+    background: var(--surface-active);
+    color: var(--ice);
+    font-weight: 600;
+    box-shadow: inset 0 0 0 1px rgba(6, 182, 212, 0.3);
+  }
+
+  .nav-group-label {
+    padding: 0 20px;
+    margin: 16px 0 6px;
+    color: var(--ink-low);
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* A small count pill on a nav item, e.g. 3 open incidents. */
+  .nav-count {
+    margin-left: auto;
+    min-width: 18px;
+    padding: 1px 6px;
+    border-radius: 9px;
+    background: var(--surface-raised);
+    color: var(--ink-mid);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-align: center;
+  }
+  .nav-count--alert {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--red);
+  }
+  .nav-count--warn {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--amber);
+  }
+
+  /* --- Page header strip above the content --- */
+  .page-title {
+    margin: 0;
+    color: var(--ink-hi);
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .page-blurb {
+    margin: 2px 0 0;
+    color: var(--ink-low);
+    font-size: 12.5px;
+  }
+
+  /* --- Thin progress bar, used for expedition completion --- */
+  .progress {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--surface-sunken);
+    overflow: hidden;
+  }
+  .progress > span {
+    display: block;
+    height: 100%;
+    border-radius: 2px;
+    background: var(--ice);
+  }
+  .progress--warn > span {
+    background: var(--amber);
+  }
+  .progress--muted > span {
+    background: var(--ink-low);
+  }
+
+  /* --- Critical alert banner (Emergency + Dashboard) --- */
+  .alert-strip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-left: 3px solid var(--red);
+    border-radius: var(--radius);
+    background: rgba(239, 68, 68, 0.05);
+  }
+  .alert-strip--warn {
+    border-color: rgba(245, 158, 11, 0.25);
+    border-left-color: var(--amber);
+    background: rgba(245, 158, 11, 0.05);
+  }
+
+  /* --- A labelled key/value row, used in detail panels --- */
+  .kv {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 12.5px;
+  }
+  .kv:last-child {
+    border-bottom: 0;
+  }
+  .kv > dt {
+    color: var(--ink-low);
+  }
+  .kv > dd {
+    margin: 0;
+    color: var(--ink-hi);
+    text-align: right;
+  }
+
+  /* --- Sign-in screen: one of the four role choices ---
+     Used by src/pages/Login.jsx. */
+  .login-role {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background-color: var(--surface-card);
+    text-align: left;
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .login-role:hover {
+    border-color: var(--ice-dim);
+    background-color: var(--surface-hover);
+  }
+  .login-role--active {
+    background-color: var(--surface-active);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* --- Read-only session notice (shown by src/App.jsx) --- */
+  .readonly-strip {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 6px 16px;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+    background: rgba(34, 197, 94, 0.04);
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: var(--ink-mid);
+  }
+
+  /* --- Database problem notice (shown by src/App.jsx) --- */
+  .sync-strip {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 8px 16px;
+    border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+    background: rgba(245, 158, 11, 0.04);
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--ink-mid);
+  }
+  .sync-strip__action {
+    flex-shrink: 0;
+    border-bottom: 1px solid currentColor;
+    color: var(--ink-hi);
+    font-size: 11px;
+  }
+  .sync-strip__action:hover {
+    color: var(--amber);
+  }
+
+/* ============================================================
+   4. MAP (Leaflet)
+   ============================================================
+   Leaflet ships its own stylesheet, which is imported at the top of
+   src/pages/MapView.jsx. That stylesheet is built for a LIGHT page, so
+   it works well with our new light theme.
+
+   Nothing here changes how the map WORKS — it is purely appearance.
+   ============================================================ */
+
+/* The bordered box the map sits inside. */
+.map-shell {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Leaflet ocean background — seamlessly matches OpenStreetMap water palette in both light & dark mode to eliminate empty grey blocks. */
+.leaflet-container {
+  background: #aad3df;
+  font-family: var(--font-body);
+}
+[data-theme="dark"] .leaflet-container,
+[data-theme="cyan"] .leaflet-container {
+  background: #030c12;
+}
+[data-theme="black"] .leaflet-container {
+  background: #000000;
+}
+
+/* REALISTIC MAP BASEMAP TILES.
+   Photorealistic Satellite and Topographic layers keep full, vibrant natural colors! */
+.map-tiles {
+  filter: saturate(1.1) contrast(1.05);
+}
+.map-tiles--realistic {
+  filter: saturate(1.2) contrast(1.08) brightness(1.02);
+}
+[data-theme="dark"] .map-tiles--realistic,
+[data-theme="cyan"] .map-tiles--realistic,
+[data-theme="black"] .map-tiles--realistic {
+  filter: saturate(1.25) contrast(1.1) brightness(1.02);
+}
+
+.map-tiles--standard {
+  filter: saturate(0.95) contrast(1.05);
+}
+[data-theme="dark"] .map-tiles--standard,
+[data-theme="cyan"] .map-tiles--standard,
+[data-theme="black"] .map-tiles--standard {
+  filter: grayscale(0.25) brightness(0.7) contrast(1.15);
+}
+
+/* 3D Perspective Tilt on Map Shell — horizon recedes while foreground expands */
+.map-shell--tilted {
+  perspective: 1000px;
+  overflow: hidden;
+}
+.map-shell--tilted .leaflet-container {
+  transform: rotateX(36deg) scale(1.1);
+  transform-origin: center 88%;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5);
+}
+.map-shell--tilted::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 130px;
+  background: linear-gradient(to bottom, rgba(11, 21, 34, 0.85), rgba(11, 21, 34, 0.3) 60%, transparent);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Zoom buttons. */
+.leaflet-control-zoom {
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+.leaflet-control-zoom a {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
+  font-weight: bold;
+}
+[data-theme="dark"] .leaflet-control-zoom a,
+[data-theme="cyan"] .leaflet-control-zoom a,
+[data-theme="black"] .leaflet-control-zoom a {
+  background: var(--surface-card) !important;
+  border-color: var(--line) !important;
+  color: var(--ink-hi) !important;
+}
+.leaflet-control-zoom a:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+[data-theme="dark"] .leaflet-control-zoom a:hover,
+[data-theme="cyan"] .leaflet-control-zoom a:hover,
+[data-theme="black"] .leaflet-control-zoom a:hover {
+  background: var(--surface-raised) !important;
+}
+
+/* Continent & Ocean Watermark Labels (matching World Physical Atlas photo) */
+.continent-watermark-wrapper,
+.ocean-watermark-wrapper {
+  background: transparent !important;
+  border: none !important;
+}
+
+.continent-watermark {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  color: #111827;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 12px rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+  white-space: nowrap;
+  user-select: none;
+  text-align: center;
+}
+[data-theme="dark"] .continent-watermark,
+[data-theme="cyan"] .continent-watermark,
+[data-theme="black"] .continent-watermark {
+  color: #f8fafc;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.95), 0 0 12px rgba(0, 0, 0, 0.85);
+}
+
+.ocean-watermark {
+  font-family: Georgia, Cambria, serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 13px;
+  color: #1f6e9e;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 12px rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+  white-space: nowrap;
+  user-select: none;
+  text-align: center;
+}
+[data-theme="dark"] .ocean-watermark,
+[data-theme="cyan"] .ocean-watermark,
+[data-theme="black"] .ocean-watermark {
+  color: #7dd3fc;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.95);
+}
+
+/* OSM requires attribution to stay visible. We keep it — just quiet. */
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: var(--ink-low) !important;
+  font-size: 9.5px !important;
+}
+.leaflet-control-attribution a {
+  color: var(--ink-mid) !important;
+}
+
+/* Hover labels on markers. */
+.leaflet-tooltip {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-card);
+  color: var(--ink-hi);
+  box-shadow: var(--shadow-md);
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.leaflet-tooltip::before {
+  display: none;
+}
+
+/* --- OUR OWN MARKERS --- */
+.map-pin {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  transition: transform 0.12s ease;
+}
+.map-pin:hover {
+  transform: scale(1.25);
+  z-index: 1000;
+}
+
+/* Sites — a square. Stations, camps, vessels, depots, ports, HQ. */
+.map-pin--site {
+  width: 12px;
+  height: 12px;
+  border: 2px solid white;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* People — a round dot, smaller than a site. */
+.map-pin--person {
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid white;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Incidents — a ring that pulses */
+.map-pin--incident {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--red);
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.2);
+  animation: pulse-alert 1.9s ease-in-out infinite;
+}
+.map-pin--incident::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+/* Current Location / Active Workstation — high-visibility pulsing radar ring */
+.map-pin--current-location {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-pin--current-location::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(14, 165, 233, 0.25);
+  border: 2px solid var(--ice);
+  animation: radar-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+.map-pin--current-location::after {
+  content: '';
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px dashed rgba(14, 165, 233, 0.6);
+  animation: radar-spin 8s linear infinite;
+}
+.map-pin--current-location-core {
+  position: relative;
+  z-index: 2;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ice);
+  border: 2px solid white;
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.9), 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Custom Arbitrary Survey Target Pin */
+.map-pin--custom-point {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-pin--custom-point::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.22);
+  border: 2px solid var(--amber);
+  animation: radar-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+.map-pin--custom-point::after {
+  content: '';
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px dashed rgba(245, 158, 11, 0.7);
+  animation: radar-spin 10s linear infinite;
+}
+.map-pin--custom-point-reticle {
+  position: relative;
+  z-index: 2;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--amber);
+  border: 2px solid white;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.9), 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes radar-ping {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  80%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes radar-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Selected marker gets a halo */
+.map-pin--selected {
+  box-shadow:
+    0 0 0 3px rgba(14, 165, 233, 0.7),
+    0 0 12px rgba(14, 165, 233, 0.4);
+  transform: scale(1.2);
+}
+
+/* A small legend row: the swatch mirrors the marker shape. */
+.legend-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border: 1.5px solid white;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom Polar Map Leaflet Popup */
+.polar-map-popup .leaflet-popup-content-wrapper {
+  background: var(--surface-card) !important;
+  color: var(--ink-hi) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.45), 0 8px 12px -4px rgba(0, 0, 0, 0.3) !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  font-family: var(--font-body) !important;
+}
+.polar-map-popup .leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
+  min-width: 260px !important;
+  max-width: 320px !important;
+}
+.polar-map-popup .leaflet-popup-tip {
+  background: var(--surface-card) !important;
+  border: 1px solid var(--line) !important;
+}
+.polar-map-popup a.leaflet-popup-close-button {
+  color: var(--ink-mid) !important;
+  padding: 6px 8px 0 0 !important;
+  z-index: 20 !important;
+}
+.polar-map-popup a.leaflet-popup-close-button:hover {
+  color: var(--ink-hi) !important;
+}
+
+/* Polar Popup High-Density HUD Elements */
+.polar-popup-card {
+  padding: 11px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: var(--surface-card);
+}
+.polar-popup-card--critical {
+  border-top: 3px solid var(--red);
+}
+.polar-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.polar-popup-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.polar-popup-badge--site {
+  background: rgba(14, 165, 233, 0.15);
+  color: var(--ice);
+}
+.polar-popup-badge--person {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--green);
+}
+.polar-popup-badge--critical {
+  background: rgba(239, 68, 68, 0.18);
+  color: var(--red);
+}
+.polar-popup-badge--gps {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--ice-dim);
+  font-size: 9px;
+}
+.polar-popup-coords {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--ink-mid);
+  white-space: nowrap;
+}
+.polar-popup-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink-hi);
+  line-height: 1.25;
+}
+.polar-popup-region {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ice);
+  margin-bottom: 1px;
+}
+.polar-popup-sector {
+  font-size: 10.5px;
+  color: var(--ink-mid);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.polar-popup-grid {
+  border-top: 1px solid var(--line-soft);
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5px;
+  font-size: 11px;
+}
+.polar-popup-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+.polar-popup-k {
+  color: var(--ink-low);
+  flex-shrink: 0;
+}
+.polar-popup-v {
+  color: var(--ink-hi);
+  font-weight: 500;
+  text-align: right;
+  word-break: break-word;
+}
+.polar-popup-alert-bar {
+  margin-top: 4px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--red);
+  font-weight: 600;
+  font-size: 10.5px;
+}
+.polar-popup-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px solid var(--line-soft);
+}
+.polar-popup-btn {
+  flex: 1;
+  padding: 4.5px 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  background: var(--surface-raised);
+  color: var(--ink-hi);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+.polar-popup-btn:hover {
+  border-color: var(--ice);
+  background: var(--surface-base);
+}
+.polar-popup-btn--primary {
+  background: var(--accent);
+  color: var(--accent-contrast, white);
+  border-color: var(--accent);
+}
+.polar-popup-btn--primary:hover {
+  filter: brightness(1.1);
+}
+.polar-popup-btn--alert {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--red);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+.polar-popup-btn--alert:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
+
+/* ---------- 4b. WEATHER ---------- */
+.forecast-day {
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 6px;
+  text-align: center;
+  transition: border-color 0.15s ease;
+}
+.forecast-day:hover {
+  border-color: var(--ice-dim);
+}
+
+/* ---------- 4c. EMERGENCY ---------- */
+.incident {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ink-low);
+  border-radius: var(--radius);
+  background: var(--surface-card);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.incident:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.incident-clock {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- 5. ANIMATION ----------
+   Deliberately minimal. A pulse for live alerts and a fade for
+   mounting content. Nothing decorative.
+*/
+@keyframes pulse-alert {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.pulse {
+  animation: pulse-alert 1.9s ease-in-out infinite;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-up {
+  animation: fade-up 0.28s ease-out;
+}
+
+/* Respect users who ask their operating system to reduce motion. */
+@media (prefers-reduced-motion: reduce) {
+  .pulse,
+  .fade-up,
+  .map-pin--incident {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   6. CHARTS (Recharts)
+   ============================================================ */
+
+.chart-wrap {
+  min-width: 0;
+  width: 100%;
+}
+
+.recharts-text {
+  font-family: var(--font-body);
+}
+.recharts-cartesian-axis-tick-value {
+  letter-spacing: 0.01em;
+}
+
+.recharts-label-list text {
+  paint-order: stroke;
+  stroke: var(--surface-card);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.recharts-wrapper:focus,
+.recharts-wrapper:focus-visible,
+.recharts-surface:focus {
+  outline: none;
+}
+
+/* THE HOVER BOX. */
+.chart-tip {
+  min-width: 120px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-lg);
+}
+.chart-tip__label {
+  color: var(--ink-hi);
+  font-size: 12px;
+  line-height: 1.3;
+}
+.chart-tip__value {
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Smooth Horizontal Scrollbar --- */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) var(--surface-sunken);
+  -webkit-overflow-scrolling: touch;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--surface-sunken);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--ice-dim);
+}
+

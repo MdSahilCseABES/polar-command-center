@@ -1,0 +1,548 @@
+{
+  "name": "Polar Command Center - Automated Telemetry & Incident Dispatcher",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000001",
+      "name": "Every 15 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "polar-dispatch",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0002-4000-8000-000000000002",
+      "name": "Webhook - Ingest Polar Incident",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        560
+      ],
+      "webhookId": "polar-dispatch-webhook-id"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.open-meteo.com/v1/forecast",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "latitude",
+              "value": "-70.767,-69.407,78.923"
+            },
+            {
+              "name": "longitude",
+              "value": "11.733,76.185,11.928"
+            },
+            {
+              "name": "current",
+              "value": "temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,wind_gusts_10m,weather_code"
+            },
+            {
+              "name": "wind_speed_unit",
+              "value": "kmh"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "a1b2c3d4-0003-4000-8000-000000000003",
+      "name": "Fetch Polar Weather Telemetry",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Station metadata mapping corresponding to Open-Meteo multi-coordinate responses\nconst STATIONS = [\n  {\n    id: 'LOC-MAITRI',\n    name: 'Maitri Station',\n    sector: 'Antarctica (Queen Maud Land)',\n    latitude: -70.767,\n    longitude: 11.733\n  },\n  {\n    id: 'LOC-BHARATI',\n    name: 'Bharati Station',\n    sector: 'Antarctica (Larsemann Hills)',\n    latitude: -69.407,\n    longitude: 76.185\n  },\n  {\n    id: 'LOC-HIMADRI',\n    name: 'Himadri Station',\n    sector: 'Arctic (Ny-Alesund, Svalbard)',\n    latitude: 78.923,\n    longitude: 11.928\n  }\n];\n\n// Operational limits aligned with Polar Command Center logic\nconst OPS_LIMITS = {\n  GROUNDED: { gusts: 74, windChill: -45 },\n  HAZARDOUS: { gusts: 56, windChill: -35 },\n  MARGINAL: { gusts: 39, windChill: -25 }\n};\n\nconst items = $input.all();\nconst results = [];\n\n// Open-Meteo returns an array of objects when querying multiple coordinates\nconst weatherData = Array.isArray(items[0]?.json) ? items[0].json : [items[0]?.json];\n\nfor (let i = 0; i < STATIONS.length; i++) {\n  const station = STATIONS[i];\n  const raw = weatherData[i] || {};\n  const current = raw.current || {};\n  \n  const temp = Number(current.temperature_2m ?? 0);\n  const gusts = Number(current.wind_gusts_10m ?? 0);\n  const windChill = Number(current.apparent_temperature ?? temp);\n  const weatherCode = current.weather_code ?? 0;\n  const windSpeed = Number(current.wind_speed_10m ?? 0);\n\n  let opsStatus = 'NORMAL';\n  let severity = 'LOW';\n  let reason = 'Conditions within safe operational limits';\n  let hasHazard = false;\n\n  if (gusts >= OPS_LIMITS.GROUNDED.gusts || windChill <= OPS_LIMITS.GROUNDED.windChill) {\n    opsStatus = 'GROUNDED';\n    severity = 'CRITICAL';\n    hasHazard = true;\n    reason = gusts >= OPS_LIMITS.GROUNDED.gusts\n      ? `Extreme wind gusts (${gusts} km/h >= ${OPS_LIMITS.GROUNDED.gusts} km/h threshold)`\n      : `Extreme wind chill (${windChill}°C <= ${OPS_LIMITS.GROUNDED.windChill}°C threshold)`;\n  } else if (gusts >= OPS_LIMITS.HAZARDOUS.gusts || windChill <= OPS_LIMITS.HAZARDOUS.windChill) {\n    opsStatus = 'HAZARDOUS';\n    severity = 'HIGH';\n    hasHazard = true;\n    reason = gusts >= OPS_LIMITS.HAZARDOUS.gusts\n      ? `Hazardous wind gusts (${gusts} km/h >= ${OPS_LIMITS.HAZARDOUS.gusts} km/h threshold)`\n      : `Dangerous wind chill (${windChill}°C <= ${OPS_LIMITS.HAZARDOUS.windChill}°C threshold)`;\n  } else if (gusts >= OPS_LIMITS.MARGINAL.gusts || windChill <= OPS_LIMITS.MARGINAL.windChill) {\n    opsStatus = 'MARGINAL';\n    severity = 'MEDIUM';\n    hasHazard = false; // Logged for situational awareness\n    reason = `Marginal operating window (${gusts} km/h gusts, wind chill ${windChill}°C)`;\n  }\n\n  results.push({\n    json: {\n      hasHazard,\n      opsStatus,\n      severity,\n      station_id: station.id,\n      station_name: station.name,\n      sector: station.sector,\n      latitude: station.latitude,\n      longitude: station.longitude,\n      telemetry: {\n        temperature: temp,\n        apparentTemperature: windChill,\n        windGusts: gusts,\n        windSpeed,\n        weatherCode\n      },\n      reason,\n      hazardDescription: hasHazard\n        ? `[Automated n8n Weather Telemetry Alert] ${station.name}: ${reason}. Traverse and aerial operations suspended.`\n        : null,\n      evaluatedAt: new Date().toISOString()\n    }\n  });\n}\n\nreturn results;"
+      },
+      "id": "a1b2c3d4-0004-4000-8000-000000000004",
+      "name": "Assess Ops Limits & Detect Hazards",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.hasHazard }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "a1b2c3d4-0005-4000-8000-000000000005",
+      "name": "Hazard Detected?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        980,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ ($env.SUPABASE_URL || 'https://xyzcompany.supabase.co').replace(/\\/+$/, '') + '/rest/v1/emergencies' }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "select",
+              "value": "id,status,location_id,reported_at"
+            },
+            {
+              "name": "location_id",
+              "value": "={{ 'eq.' + $json.station_id }}"
+            },
+            {
+              "name": "type",
+              "value": "eq.WEATHER"
+            },
+            {
+              "name": "status",
+              "value": "in.(ACTIVE,RESPONDING)"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY || $env.VITE_SUPABASE_ANON_KEY || 'ANON_KEY_PLACEHOLDER' }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + ($env.SUPABASE_ANON_KEY || $env.VITE_SUPABASE_ANON_KEY || 'ANON_KEY_PLACEHOLDER') }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "a1b2c3d4-0006-4000-8000-000000000006",
+      "name": "Check Existing Active Weather Incidents",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        220
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Deduplicate against existing active weather emergencies in Supabase\nconst hazardContext = $('Assess Ops Limits & Detect Hazards').item.json;\nconst existing = $input.first()?.json?.body || [];\n\nconst alreadyReported = Array.isArray(existing) && existing.length > 0;\n\nif (alreadyReported) {\n  return [{\n    json: {\n      skipCreation: true,\n      reason: `Active incident already exists for ${hazardContext.station_id} (ID: ${existing[0].id})`,\n      existingIncidentId: existing[0].id,\n      hazardContext\n    }\n  }];\n}\n\n// Generate a unique incident key formatted to the PCC schema 'INC-XXXX'\nconst randomSuffix = Math.floor(1000 + Math.random() * 9000);\nconst incidentId = `INC-${randomSuffix}`;\n\nconst incidentPayload = {\n  id: incidentId,\n  type: 'WEATHER',\n  location: `${hazardContext.station_name} Field Perimeter`,\n  location_id: hazardContext.station_id,\n  latitude: hazardContext.latitude,\n  longitude: hazardContext.longitude,\n  severity: hazardContext.severity,\n  description: hazardContext.hazardDescription,\n  status: 'ACTIVE',\n  reported_at: new Date().toISOString(),\n  assigned_team: `${hazardContext.station_name} Base Safety Unit`,\n  response_note: `Automated alert triggered by n8n Open-Meteo monitor: ${hazardContext.reason}`\n};\n\nreturn [{\n  json: {\n    skipCreation: false,\n    incidentId,\n    incidentPayload,\n    hazardContext\n  }\n}];"
+      },
+      "id": "a1b2c3d4-0007-4000-8000-000000000007",
+      "name": "Deduplicate & Format Incident Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "c2",
+              "leftValue": "={{ $json.skipCreation }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "a1b2c3d4-0008-4000-8000-000000000008",
+      "name": "Create Incident?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1700,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ ($env.SUPABASE_URL || 'https://xyzcompany.supabase.co').replace(/\\/+$/, '') + '/rest/v1/emergencies' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY || $env.VITE_SUPABASE_ANON_KEY || 'ANON_KEY_PLACEHOLDER' }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + ($env.SUPABASE_ANON_KEY || $env.VITE_SUPABASE_ANON_KEY || 'ANON_KEY_PLACEHOLDER') }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.incidentPayload) }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0009-4000-8000-000000000009",
+      "name": "POST New Incident to Supabase",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1940,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ ($env.SUPABASE_URL || 'https://xyzcompany.supabase.co').replace(/\\/+$/, '') + '/rest/v1/inventory' }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "select",
+              "value": "id,item_name,category,quantity,minimum_quantity,unit,location,condition"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY || $env.VITE_SUPABASE_ANON_KEY || 'ANON_KEY_PLACEHOLDER' }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + ($env.SUPABASE_ANON_KEY || $env.VITE_SUPABASE_ANON_KEY || 'ANON_KEY_PLACEHOLDER') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1b2c3d4-0010-4000-8000-000000000010",
+      "name": "Fetch Inventory from Supabase",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        440
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Audit inventory items where current quantity <= minimum_quantity\nconst items = $input.all();\nconst lowStockAlerts = [];\n\nfor (const item of items) {\n  const row = item.json;\n  const qty = Number(row.quantity ?? 0);\n  const minQty = Number(row.minimum_quantity ?? 0);\n  \n  if (qty <= minQty) {\n    lowStockAlerts.push({\n      id: row.id,\n      item_name: row.item_name,\n      category: row.category,\n      current_quantity: qty,\n      minimum_required: minQty,\n      deficit: minQty - qty,\n      unit: row.unit,\n      location: row.location,\n      condition: row.condition,\n      status: 'LOW_STOCK'\n    });\n  }\n}\n\nreturn [{\n  json: {\n    auditedAt: new Date().toISOString(),\n    totalLowStockCount: lowStockAlerts.length,\n    items: lowStockAlerts,\n    summaryMessage: `[Inventory Audit] ${lowStockAlerts.length} stock item(s) are critically low or depleted.`\n  }\n}];"
+      },
+      "id": "a1b2c3d4-0011-4000-8000-000000000011",
+      "name": "Audit Low-Stock Levels",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalizes incoming dispatch webhook payloads from frontend or satphones\nconst body = $input.first()?.json?.body || $input.first()?.json || {};\n\nconst id = body.id || `INC-${Math.floor(1000 + Math.random() * 9000)}`;\nconst type = (body.type || 'OTHER').toUpperCase();\nconst location = body.location || 'Unknown Polar Sector';\nconst location_id = body.location_id || 'LOC-MAITRI';\nconst severity = (body.severity || 'HIGH').toUpperCase();\nconst description = body.description || 'Manual emergency dispatch received via n8n webhook';\n\nconst incidentRecord = {\n  id,\n  type,\n  location,\n  location_id,\n  latitude: Number(body.latitude ?? -70.767),\n  longitude: Number(body.longitude ?? 11.733),\n  severity,\n  description,\n  status: 'ACTIVE',\n  reported_at: new Date().toISOString(),\n  assigned_team: body.assigned_team || 'Base Emergency Response Unit',\n  personnel_id: body.personnel_id || null,\n  expedition_id: body.expedition_id || null\n};\n\nreturn [{\n  json: {\n    source: 'WEBHOOK_DISPATCH',\n    incidentRecord\n  }\n}];"
+      },
+      "id": "a1b2c3d4-0012-4000-8000-000000000012",
+      "name": "Normalize Webhook Dispatch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ ($env.SUPABASE_URL || 'https://xyzcompany.supabase.co').replace(/\\/+$/, '') + '/rest/v1/emergencies' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY || $env.VITE_SUPABASE_ANON_KEY || 'ANON_KEY_PLACEHOLDER' }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + ($env.SUPABASE_ANON_KEY || $env.VITE_SUPABASE_ANON_KEY || 'ANON_KEY_PLACEHOLDER') }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.incidentRecord) }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0013-4000-8000-000000000013",
+      "name": "Insert Webhook Incident to Supabase",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare formatted alert broadcast payload for downstream messaging (Slack, Discord, Email, Webhook)\nconst weatherIncidents = $('POST New Incident to Supabase').all() || [];\nconst webhookIncidents = $('Insert Webhook Incident to Supabase').all() || [];\nconst inventoryAudit = $('Audit Low-Stock Levels').first()?.json || {};\n\nconst createdIncidents = [\n  ...weatherIncidents.map(i => i.json),\n  ...webhookIncidents.map(i => i.json)\n];\n\nconst title = '🚨 [POLAR COMMAND CENTER] Automation Dispatch Summary';\nconst timestamp = new Date().toISOString();\n\nreturn [{\n  json: {\n    title,\n    timestamp,\n    incidentCount: createdIncidents.length,\n    createdIncidents,\n    lowStockSummary: inventoryAudit,\n    status: 'DISPATCH_COMPLETE'\n  }\n}];"
+      },
+      "id": "a1b2c3d4-0014-4000-8000-000000000014",
+      "name": "Format Alert Broadcast Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Every 15 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Fetch Polar Weather Telemetry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Polar Weather Telemetry": {
+      "main": [
+        [
+          {
+            "node": "Assess Ops Limits & Detect Hazards",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assess Ops Limits & Detect Hazards": {
+      "main": [
+        [
+          {
+            "node": "Hazard Detected?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hazard Detected?": {
+      "main": [
+        [
+          {
+            "node": "Check Existing Active Weather Incidents",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch Inventory from Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Existing Active Weather Incidents": {
+      "main": [
+        [
+          {
+            "node": "Deduplicate & Format Incident Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deduplicate & Format Incident Payload": {
+      "main": [
+        [
+          {
+            "node": "Create Incident?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Incident?": {
+      "main": [
+        [
+          {
+            "node": "POST New Incident to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch Inventory from Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST New Incident to Supabase": {
+      "main": [
+        [
+          {
+            "node": "Fetch Inventory from Supabase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Format Alert Broadcast Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Inventory from Supabase": {
+      "main": [
+        [
+          {
+            "node": "Audit Low-Stock Levels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audit Low-Stock Levels": {
+      "main": [
+        [
+          {
+            "node": "Format Alert Broadcast Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Ingest Polar Incident": {
+      "main": [
+        [
+          {
+            "node": "Normalize Webhook Dispatch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Webhook Dispatch": {
+      "main": [
+        [
+          {
+            "node": "Insert Webhook Incident to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Webhook Incident to Supabase": {
+      "main": [
+        [
+          {
+            "node": "Format Alert Broadcast Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

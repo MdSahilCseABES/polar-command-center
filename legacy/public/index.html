@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Polar Expedition Logistics &amp; Asset Management &mdash; Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="rail">
+    <div class="rail-brand">
+      <span class="rail-brand-mark">P</span>
+      <div class="rail-brand-text">
+        <span class="rail-brand-title">POLAR OPS</span>
+        <span class="rail-brand-sub">Logistics Console</span>
+      </div>
+    </div>
+
+    <nav class="rail-nav" id="nav">
+      <button class="rail-link active" data-view="dashboard"><span class="rail-link-idx">00</span>Dashboard</button>
+      <button class="rail-link" data-view="expeditions"><span class="rail-link-idx">01</span>Expedition Planning</button>
+      <button class="rail-link" data-view="cargo"><span class="rail-link-idx">02</span>Cargo Tracking</button>
+      <button class="rail-link" data-view="inventory"><span class="rail-link-idx">03</span>Inventory</button>
+      <button class="rail-link" data-view="personnel"><span class="rail-link-idx">04</span>Personnel Movement</button>
+      <button class="rail-link rail-link--alert" data-view="emergency"><span class="rail-link-idx">05</span>Emergency Response</button>
+    </nav>
+
+    <div class="rail-footer">
+      <div class="rail-clock" id="clock">--:--:--</div>
+      <div class="rail-status" id="conn-status"><span class="dot dot--ok"></span>Sync: nominal</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h1 id="view-title">Operations Dashboard</h1>
+      <p id="view-subtitle" class="topbar-sub">Live composite view across all active expeditions</p>
+    </header>
+
+    <section class="content" id="content">
+      <!-- view content injected by app.js -->
+    </section>
+  </main>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
